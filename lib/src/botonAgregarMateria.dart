@@ -47,7 +47,7 @@ class FormularioAgregarMateria extends StatelessWidget {
                 },
               ),
               TextField(
-                decoration: const InputDecoration(labelText: 'Próxima Clase'),
+                decoration: const InputDecoration(labelText: 'Salón de clases'),
                 onChanged: (value) {
                   salon = value;
                 },
