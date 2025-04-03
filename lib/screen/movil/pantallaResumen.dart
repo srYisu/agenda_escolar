@@ -1,14 +1,14 @@
 import 'package:agenda_escolar/src/colores.dart';
 import 'package:flutter/material.dart';
 
-class Pantallacalendario extends StatefulWidget {
-  const Pantallacalendario({super.key});
+class Pantallaresumen extends StatefulWidget {
+  const Pantallaresumen({super.key});
 
   @override
-  State<Pantallacalendario> createState() => _CalendarioState();
+  State<Pantallaresumen> createState() => _PantallaresumenState();
 }
 
-class _CalendarioState extends State<Pantallacalendario> {
+class _PantallaresumenState extends State<Pantallaresumen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

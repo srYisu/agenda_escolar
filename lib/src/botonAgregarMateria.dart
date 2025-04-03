@@ -67,7 +67,7 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
       ),
       child: SingleChildScrollView(
         child: Container(
-          constraints: const BoxConstraints(maxHeight: 600),
+          constraints: const BoxConstraints(maxHeight: 450),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

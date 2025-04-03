@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:agenda_escolar/src/materiasLista.dart';
 import 'package:agenda_escolar/src/materiaContainer.dart';
 import 'package:agenda_escolar/src/colores.dart';
 import 'package:agenda_escolar/src/botonAgregarMateria.dart';
@@ -63,13 +62,6 @@ class _PantallamateriasState extends State<Pantallamaterias> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colores().colorPrimario,
-      appBar: AppBar(
-        title: const Text(
-          'Materias',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colores().colorPrimario,
-      ),
       body: ValueListenableBuilder(
         valueListenable: box.listenable(),
         builder: (context, Box<Materia> box, _) {
