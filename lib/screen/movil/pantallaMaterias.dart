@@ -84,62 +84,71 @@ class _PantallamateriasState extends State<Pantallamaterias> {
                 return const SizedBox.shrink(); // Retorna un widget vacío
               }
 
-              return Dismissible(
-                key: Key(materia.nombreMateria + index.toString()),
-                background: Container(
-                  color: Colors.red,
-                  padding: const EdgeInsets.only(left: 20),
-                  alignment: Alignment.centerLeft,
-                  child: const Icon(Icons.delete, color: Colors.white),
+            return Padding(
+  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(10), // Redondear esquinas
+    child: Dismissible(
+      key: Key(materia.nombreMateria + index.toString()),
+      background: Container(
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(10), // Redondear esquinas
+        ),
+        padding: const EdgeInsets.only(left: 20),
+        alignment: Alignment.centerLeft,
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      secondaryBackground: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(10), // Redondear esquinas
+        ),
+        padding: const EdgeInsets.only(right: 20),
+        alignment: Alignment.centerRight,
+        child: const Icon(Icons.edit, color: Colors.white),
+      ),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.startToEnd) {
+          // Confirmar eliminación
+          final confirmar = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Eliminar"),
+              content: const Text("¿Estás seguro de eliminar esta materia?"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text("Cancelar"),
                 ),
-                secondaryBackground: Container(
-                  color: Colors.blue,
-                  padding: const EdgeInsets.only(right: 20),
-                  alignment: Alignment.centerRight,
-                  child: const Icon(Icons.edit, color: Colors.white),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text("Eliminar"),
                 ),
-                confirmDismiss: (direction) async {
-                  if (direction == DismissDirection.startToEnd) {
-                    // Confirmar eliminación
-                    final confirmar = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text("Eliminar"),
-                        content: const Text("¿Estás seguro de eliminar esta materia?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            child: const Text("Cancelar"),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            child: const Text("Eliminar"),
-                          ),
-                        ],
-                      ),
-                    );
-                    return confirmar ?? false;
-                  } else {
-                    // Editar (no elimina)
-                    _mostrarFormularioEditarMateria(index, materia);
-                    return false;
-                  }
-                },
-                onDismissed: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    box.deleteAt(index); // Eliminar la materia
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: materiasContaioner(
-                    colorMateria: Color(materia.colorMateria),
-                    nombreMateria: materia.nombreMateria,
-                    nombreProfesor: materia.nombreProfesor,
-                    salonClases: materia.salonClases,
-                  ),
-                ),
-              );
+              ],
+            ),
+          );
+          return confirmar ?? false;
+        } else {
+          // Editar (no elimina)
+          _mostrarFormularioEditarMateria(index, materia);
+          return false;
+        }
+      },
+      onDismissed: (direction) {
+        if (direction == DismissDirection.startToEnd) {
+          box.deleteAt(index); // Eliminar la materia
+        }
+      },
+      child: materiasContaioner(
+        colorMateria: Color(materia.colorMateria),
+        nombreMateria: materia.nombreMateria,
+        nombreProfesor: materia.nombreProfesor,
+        salonClases: materia.salonClases,
+      ),
+    ),
+  ),
+);
             },
           );
         },
