@@ -4,8 +4,8 @@ class materiasContaioner extends StatefulWidget {
   final Color colorMateria;
   final String nombreMateria;
   final String nombreProfesor;
-  final String proximaClase;
-  const materiasContaioner({super.key, required this.colorMateria, required this.nombreMateria, required this.proximaClase, required this.nombreProfesor});
+  final String salonClases;
+  const materiasContaioner({super.key, required this.colorMateria, required this.nombreMateria, required this.salonClases, required this.nombreProfesor});
 
   @override
   State<materiasContaioner> createState() => _materiasContaionerState();
@@ -67,7 +67,7 @@ class _materiasContaionerState extends State<materiasContaioner> {
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                     ),
                     Text(
-                      widget.proximaClase,
+                      widget.salonClases,
                       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                     ),
                   ],
