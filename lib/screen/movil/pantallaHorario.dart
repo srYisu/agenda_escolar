@@ -13,6 +13,11 @@ class _HorarioState extends State<Pantallahorario> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colores().colorPrimario,
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        backgroundColor: Colores().colorBoton,
+        child: const Icon(Icons.add, color: Colors.black),
+      ),
     );
   }
 }

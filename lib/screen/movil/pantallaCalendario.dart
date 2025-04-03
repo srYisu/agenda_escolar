@@ -13,6 +13,11 @@ class _CalendarioState extends State<Pantallacalendario> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colores().colorPrimario,
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        backgroundColor: Colores().colorBoton,
+        child: const Icon(Icons.add, color: Colors.black),
+      ),
     );
   }
 }
