@@ -9,8 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+<<<<<<< HEAD
+  table_calendar: ^3.0.9
+=======
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+>>>>>>> 21ec34f91849c273751e5a4063a79d1858cbf7d7
 
 dev_dependencies:
   flutter_test:
