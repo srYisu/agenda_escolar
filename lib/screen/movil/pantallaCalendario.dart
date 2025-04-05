@@ -224,20 +224,23 @@ class _CalendarioState extends State<Pantallacalendario> {
                   evento.notas,
                   style: Theme.of(context).primaryTextTheme.bodyMedium,
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.yellow),
-                      onPressed: () {
-                        _mostrarFormularioEditarEvento(context, evento);
-                      },
+                trailing: PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, color: Colors.white),
+                  onSelected: (value) {
+                    if (value == 'Editar') {
+                      _mostrarFormularioEditarEvento(context, evento);
+                    } else if (value == 'Eliminar') {
+                      _eliminarEvento(evento);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'Editar',
+                      child: Text('Editar'),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.white),
-                      onPressed: () {
-                        _eliminarEvento(evento);
-                      },
+                    const PopupMenuItem(
+                      value: 'Eliminar',
+                      child: Text('Eliminar'),
                     ),
                   ],
                 ),
