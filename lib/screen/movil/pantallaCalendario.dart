@@ -37,6 +37,117 @@ class _CalendarioState extends State<Pantallacalendario> {
       _cargarEventosDelDia(_selectedDay!);
     });
   }
+  void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
+  final TextEditingController tituloController =
+      TextEditingController(text: evento.titulo);
+  final TextEditingController notasController =
+      TextEditingController(text: evento.notas);
+  DateTime? fechaSeleccionada = evento.fecha;
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        ),
+        child: Form(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Editar Evento',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: tituloController,
+                decoration: InputDecoration(
+                  labelText: 'Título',
+                  border: const OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: notasController,
+                decoration: InputDecoration(
+                  labelText: 'Nota Adicional',
+                  border: const OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Fecha',
+                  border: const OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
+                readOnly: true,
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: fechaSeleccionada ?? DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      fechaSeleccionada = selectedDate;
+                    });
+                  }
+                },
+                controller: TextEditingController(
+                  text: DateFormat('dd/MM/yyyy').format(fechaSeleccionada!),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (tituloController.text.isNotEmpty &&
+                      fechaSeleccionada != null) {
+                    setState(() {
+                      evento.titulo = tituloController.text;
+                      evento.notas = notasController.text;
+                      evento.fecha = fechaSeleccionada!;
+                      _eventosController.actualizarEvento(evento);
+                      _cargarEventosDelDia(_selectedDay!);
+                    });
+                    Navigator.pop(context);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Por favor, completa todos los campos obligatorios.'),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                child: const Text('Guardar'),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +224,22 @@ class _CalendarioState extends State<Pantallacalendario> {
                   evento.notas,
                   style: Theme.of(context).primaryTextTheme.bodyMedium,
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  onPressed: () {
-                    _eliminarEvento(evento);
-                  },
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.yellow),
+                      onPressed: () {
+                        _mostrarFormularioEditarEvento(context, evento);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.white),
+                      onPressed: () {
+                        _eliminarEvento(evento);
+                      },
+                    ),
+                  ],
                 ),
               ),
             );
