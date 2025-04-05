@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/horariosController.dart';
-import 'package:agenda_escolar/src/botonAgregarHorario.dart';
 import 'package:agenda_escolar/src/containerHorario.dart';
+import 'package:intl/intl.dart';
+import 'package:agenda_escolar/data/boxHorarios.dart';
+import 'package:agenda_escolar/src/botonAgregarHorario.dart';
 
 class Pantallahorario extends StatefulWidget {
   const Pantallahorario({super.key});
@@ -12,8 +14,7 @@ class Pantallahorario extends StatefulWidget {
 
 class _HorarioState extends State<Pantallahorario> {
   final HorarioController _horarioController = HorarioController();
- late PageController _pageController;
-
+  late PageController _pageController;
 
   final List<String> _diasSemana = [
     "Domingo",
@@ -26,32 +27,28 @@ class _HorarioState extends State<Pantallahorario> {
     "Domingo",
     "Lunes",
   ];
- int _diaActualIndex = 1;
+  int _diaActualIndex = 1;
 
-
-  void _eliminarHorario(int index) {
-    _horarioController.eliminarMateria(index);
+  void _eliminarHorario(Horario horario) {
+    _horarioController.eliminarMateria(horario.key as int); // Usar la clave de Hive
     setState(() {}); // Actualizar la lista después de eliminar
   }
 
-  void _editarHorario(int index) {
-    final horario = _horarioController.obtenerPorIndice(index);
-    if (horario != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FormularioHorario(
-            horarioExistente: horario, // Pasar el horario a editar
-            onGuardar: () {
-              setState(() {}); // Actualizar la lista después de editar
-            },
-          ),
+  void _editarHorario(Horario horario) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FormularioHorario(
+          horarioExistente: horario, // Pasar el horario a editar
+          onGuardar: () {
+            setState(() {}); // Actualizar la lista después de editar
+          },
         ),
-      );
-    }
+      ),
+    );
   }
 
- @override
+  @override
   void initState() {
     super.initState();
     // Obtener el día actual y calcular el índice inicial
@@ -84,7 +81,26 @@ class _HorarioState extends State<Pantallahorario> {
       });
     }
   }
-  
+
+  TimeOfDay _convertirStringATimeOfDay(String hora) {
+    final formato = DateFormat("hh:mm a"); // Formato con AM/PM
+    final DateTime dateTime = formato.parse(hora);
+    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+  }
+
+  bool _esHorarioActivo(String horaInicio, String horaFin) {
+    final TimeOfDay ahora = TimeOfDay.now();
+    final TimeOfDay inicio = _convertirStringATimeOfDay(horaInicio);
+    final TimeOfDay fin = _convertirStringATimeOfDay(horaFin);
+
+    int convertirAMinutos(TimeOfDay time) => time.hour * 60 + time.minute;
+
+    final int minutosAhora = convertirAMinutos(ahora);
+    final int minutosInicio = convertirAMinutos(inicio);
+    final int minutosFin = convertirAMinutos(fin);
+
+    return minutosAhora >= minutosInicio && minutosAhora <= minutosFin;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +126,10 @@ class _HorarioState extends State<Pantallahorario> {
                 ),
                 Text(
                   _diasSemana[_diaActualIndex],
-                  style: Theme.of(context).textTheme.bodyLarge
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 IconButton(
-                  icon:  Icon(Icons.arrow_right, color: Theme.of(context).primaryIconTheme.color),
+                  icon: Icon(Icons.arrow_right, color: Theme.of(context).primaryIconTheme.color),
                   onPressed: () {
                     _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
@@ -127,45 +143,45 @@ class _HorarioState extends State<Pantallahorario> {
           const SizedBox(height: 16),
           // PageView para los horarios
           Expanded(
-  child: PageView.builder(
-    controller: _pageController,
-    itemCount: _diasSemana.length,
-    onPageChanged: _cambiarDia,
-    itemBuilder: (context, index) {
-      // Asegurar que los días se mapean correctamente
-      final horarios = _horarioController.obtenerTodas().where((horario) {
-        return horario.diasSemana.contains(_diasSemana[index]);
-      }).toList();
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _diasSemana.length,
+              onPageChanged: _cambiarDia,
+              itemBuilder: (context, index) {
+                // Asegurar que los días se mapean correctamente
+                final horarios = _horarioController.obtenerTodas().where((horario) {
+                  return horario.diasSemana.contains(_diasSemana[index]);
+                }).toList();
 
-      return ListView.builder(
-        itemCount: horarios.length,
-        itemBuilder: (context, horarioIndex) {
-          final horario = horarios[horarioIndex];
-          return Horariocontainer(
-            nombreMateria: horario.materia.nombreMateria,
-            horaInicio: horario.horaInicio,
-            horaFin: horario.horaFin,
-            colorMateria: horario.color,
-            icon: PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (value) {
-                if (value == 'Editar') {
-                  _editarHorario(horarioIndex);
-                } else if (value == 'Eliminar') {
-                  _eliminarHorario(horarioIndex);
-                }
+                // Ordenar los horarios por hora de inicio
+                horarios.sort((a, b) {
+                  final TimeOfDay horaInicioA = _convertirStringATimeOfDay(a.horaInicio);
+                  final TimeOfDay horaInicioB = _convertirStringATimeOfDay(b.horaInicio);
+                  return horaInicioA.hour.compareTo(horaInicioB.hour) != 0
+                      ? horaInicioA.hour.compareTo(horaInicioB.hour)
+                      : horaInicioA.minute.compareTo(horaInicioB.minute);
+                });
+
+                return ListView.builder(
+                  itemCount: horarios.length,
+                  itemBuilder: (context, horarioIndex) {
+                    final horario = horarios[horarioIndex];
+                    final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
+
+                    return Horariocontainer(
+                      nombreMateria: horario.materia.nombreMateria,
+                      horaInicio: horario.horaInicio,
+                      horaFin: horario.horaFin,
+                      colorMateria: horario.color,
+                      esActivo: esActivo,
+                      onEditar: () => _editarHorario(horario),
+                      onEliminar: () => _eliminarHorario(horario),
+                    );
+                  },
+                );
               },
-              itemBuilder: (context) => [
-                const PopupMenuItem(value: 'Editar', child: Text('Editar')),
-                const PopupMenuItem(value: 'Eliminar', child: Text('Eliminar')),
-              ],
             ),
-          );
-        },
-      );
-    },
-  ),
-),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -177,7 +193,7 @@ class _HorarioState extends State<Pantallahorario> {
               builder: (context) => FormularioHorario(
                 onGuardar: () {
                   setState(() {}); // Actualizar la lista después de guardar
-                }, 
+                },
               ),
             ),
           );

@@ -5,7 +5,9 @@ class Horariocontainer extends StatefulWidget {
   final String horaInicio;
   final String horaFin;
   final Color colorMateria;
-  final Widget? icon; // Nuevo parámetro opcional para el icono
+  final bool esActivo; // Indica si el horario está activo
+  final VoidCallback onEditar;
+  final VoidCallback onEliminar;
 
   const Horariocontainer({
     super.key,
@@ -13,7 +15,9 @@ class Horariocontainer extends StatefulWidget {
     required this.horaInicio,
     required this.horaFin,
     required this.colorMateria,
-    this.icon, // Acepta un widget opcional para el icono
+    required this.esActivo,
+    required this.onEditar,
+    required this.onEliminar,
   });
 
   @override
@@ -41,35 +45,44 @@ class _HorariocontainerState extends State<Horariocontainer> {
       alignment: Alignment.topLeft,
       child: Row(
         children: [
+          // Ícono dinámico (relleno si está activo, vacío si no)
+          Icon(
+            widget.esActivo ? Icons.circle : Icons.circle_outlined,
+            color: widget.colorMateria,
+            size: 16,
+          ),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // Alinea los textos a la izquierda
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.circle, color: widget.colorMateria, size: 16),
-                    const SizedBox(width: 10),
-                    Text(
-                      widget.nombreMateria,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+                Text(
+                  widget.nombreMateria,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Text(
-                      "${widget.horaInicio} - ${widget.horaFin}",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                Text(
+                  "${widget.horaInicio} - ${widget.horaFin}",
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 5),
               ],
             ),
           ),
-          // Agregar el icono si está presente
-          if (widget.icon != null) widget.icon!,
+          // Menú desplegable para editar y eliminar
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'Editar') {
+                widget.onEditar();
+              } else if (value == 'Eliminar') {
+                widget.onEliminar();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'Editar', child: Text('Editar')),
+              const PopupMenuItem(value: 'Eliminar', child: Text('Eliminar')),
+            ],
+          ),
         ],
       ),
     );
