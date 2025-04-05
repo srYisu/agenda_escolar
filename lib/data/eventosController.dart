@@ -28,4 +28,12 @@ class EventosController {
   Future<void> actualizarEvento(Evento evento) async {
   await evento.save();
   }
+  
+  List<Evento> obtenerEventosPorRango(DateTime inicio, DateTime fin) {
+  return _box.values
+      .where((evento) =>
+          evento.fecha.isAfter(inicio.subtract(const Duration(days: 1))) &&
+          evento.fecha.isBefore(fin.add(const Duration(days: 1))))
+      .toList();
+}
 }
