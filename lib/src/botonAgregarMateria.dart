@@ -80,7 +80,7 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
   @override
   Widget build(BuildContext context) {
     final esEdicion = widget.materiaExistente != null;
-
+  
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,

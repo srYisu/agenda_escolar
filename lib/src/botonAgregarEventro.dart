@@ -3,6 +3,7 @@ import 'package:agenda_escolar/data/materiasController.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
 import 'package:agenda_escolar/data/boxEventos.dart';
 import 'package:agenda_escolar/data/boxMaterias.dart';
+import 'package:intl/intl.dart';
 
 class BotonAgregarEvento extends StatelessWidget {
   const BotonAgregarEvento({super.key});
@@ -29,6 +30,7 @@ class BotonAgregarEvento extends StatelessWidget {
 
     final TextEditingController tituloController = TextEditingController();
     final TextEditingController notasController = TextEditingController();
+    final TextEditingController fechaController = TextEditingController();
     DateTime? fechaSeleccionada;
     String? nombreMateriaSeleccionada;
 
@@ -57,11 +59,12 @@ class BotonAgregarEvento extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
                   controller: tituloController,
                   decoration: InputDecoration(
                     labelText: 'Título',
                     border: const OutlineInputBorder(),
-                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -69,7 +72,7 @@ class BotonAgregarEvento extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Materia (Opcional)',
                     border: const OutlineInputBorder(),
-                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                   items: nombresMaterias
                       .map((nombre) => DropdownMenuItem(
@@ -83,10 +86,12 @@ class BotonAgregarEvento extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
+                  controller: fechaController,
                   decoration: InputDecoration(
                     labelText: 'Fecha',
                     border: const OutlineInputBorder(),
-                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -99,16 +104,19 @@ class BotonAgregarEvento extends StatelessWidget {
                     );
                     if (selectedDate != null) {
                       fechaSeleccionada = selectedDate;
+                      fechaController.text =
+                          DateFormat('dd/MM/yyyy').format(selectedDate);
                     }
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: notasController,
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
                   decoration: InputDecoration(
                     labelText: 'Nota Adicional',
                     border: const OutlineInputBorder(),
-                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                   maxLines: 3,
                 ),
@@ -121,7 +129,12 @@ class BotonAgregarEvento extends StatelessWidget {
                       int colorFinal = Colors.blue.value; // Valor por defecto
                       final materiaEncontrada = materias.firstWhere(
                         (m) => m.nombreMateria == nombreMateriaSeleccionada,
-                        orElse: () => Materia(nombreMateria: '', colorMateria: Colors.blue.value, nombreProfesor: '', salonClases: ''),
+                        orElse: () => Materia(
+                          nombreMateria: '',
+                          colorMateria: Colors.blue.value,
+                          nombreProfesor: '',
+                          salonClases: '',
+                        ),
                       );
                       colorFinal = materiaEncontrada.colorMateria;
 

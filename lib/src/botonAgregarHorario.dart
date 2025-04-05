@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/materiasController.dart';
 import 'package:agenda_escolar/data/horariosController.dart';
 import 'package:agenda_escolar/data/boxHorarios.dart';
+import 'package:intl/intl.dart';
 
 class FormularioHorario extends StatefulWidget {
   final Function() onGuardar;
@@ -23,8 +24,8 @@ class _FormularioHorarioState extends State<FormularioHorario> {
 
   String? _materiaSeleccionada;
   List<String> _diasSeleccionados = [];
-  TimeOfDay? _horaInicio;
-  TimeOfDay? _horaFin;
+  DateTime? _horaInicio;
+  DateTime? _horaFin;
 
   final List<String> _diasSemana = [
     "Lunes",
@@ -49,11 +50,14 @@ class _FormularioHorarioState extends State<FormularioHorario> {
     }
   }
 
-  TimeOfDay _parseHora(String hora) {
-    final partes = hora.split(":");
-    final horas = int.parse(partes[0]);
-    final minutos = int.parse(partes[1].split(" ")[0]);
-    return TimeOfDay(hour: horas, minute: minutos);
+  DateTime _parseHora(String hora) {
+    final formato = DateFormat("hh:mm a"); // Formato con AM/PM
+    return formato.parse(hora);
+  }
+
+  String _formatHora(DateTime hora) {
+    final formato = DateFormat("hh:mm a"); // Formato con AM/PM
+    return formato.format(hora);
   }
 
   @override
@@ -136,17 +140,25 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               onPressed: () async {
                 final hora = await showTimePicker(
                   context: context,
-                  initialTime: _horaInicio ?? TimeOfDay.now(),
+                  initialTime: _horaInicio != null
+                      ? TimeOfDay.fromDateTime(_horaInicio!)
+                      : TimeOfDay.now(),
                 );
                 if (hora != null) {
                   setState(() {
-                    _horaInicio = hora;
+                    _horaInicio = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      hora.hour,
+                      hora.minute,
+                    );
                   });
                 }
               },
               child: Text(
                 _horaInicio != null
-                    ? "Hora de inicio: ${_horaInicio!.format(context)}"
+                    ? "Hora de inicio: ${_formatHora(_horaInicio!)}"
                     : "Seleccionar hora de inicio",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -160,17 +172,25 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               onPressed: () async {
                 final hora = await showTimePicker(
                   context: context,
-                  initialTime: _horaFin ?? TimeOfDay.now(),
+                  initialTime: _horaFin != null
+                      ? TimeOfDay.fromDateTime(_horaFin!)
+                      : TimeOfDay.now(),
                 );
                 if (hora != null) {
                   setState(() {
-                    _horaFin = hora;
+                    _horaFin = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      hora.hour,
+                      hora.minute,
+                    );
                   });
                 }
               },
               child: Text(
                 _horaFin != null
-                    ? "Hora de fin: ${_horaFin!.format(context)}"
+                    ? "Hora de fin: ${_formatHora(_horaFin!)}"
                     : "Seleccionar hora de fin",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
@@ -188,8 +208,8 @@ class _FormularioHorarioState extends State<FormularioHorario> {
 
                     final horario = Horario(
                       materia: materia,
-                      horaInicio: _horaInicio!.format(context),
-                      horaFin: _horaFin!.format(context),
+                      horaInicio: _formatHora(_horaInicio!),
+                      horaFin: _formatHora(_horaFin!),
                       diasSemana: _diasSeleccionados,
                       colorMateria: materia.colorMateria,
                     );
