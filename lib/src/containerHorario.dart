@@ -27,7 +27,7 @@ class _HorariocontainerState extends State<Horariocontainer> {
       margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -51,7 +51,7 @@ class _HorariocontainerState extends State<Horariocontainer> {
                     const SizedBox(width: 10),
                     Text(
                       widget.nombreMateria,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -60,7 +60,7 @@ class _HorariocontainerState extends State<Horariocontainer> {
                   children: [
                     Text(
                       "${widget.horaInicio} - ${widget.horaFin}",
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),

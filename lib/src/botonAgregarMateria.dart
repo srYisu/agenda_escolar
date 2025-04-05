@@ -54,7 +54,6 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
 colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
     ? widget.materiaExistente!.color
     : Colors.pinkAccent;
-
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -63,41 +62,53 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
         right: 16,
       ),
       child: SingleChildScrollView(
+
         child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            border: Border.all(
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
           constraints: const BoxConstraints(maxHeight: 450),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
                 esEdicion ? 'Editar Materia' : 'Agregar Materia',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: nombreController,
-                decoration: const InputDecoration(labelText: 'Nombre de la Materia'),
+                decoration: InputDecoration(
+                  labelText: 'Nombre de la Materia',
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               TextField(
                 controller: profesorController,
-                decoration: const InputDecoration(labelText: 'Nombre del Profesor'),
+                decoration: InputDecoration(
+                  labelText: 'Nombre del Profesor',
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               TextField(
                 controller: salonController,
-                decoration: const InputDecoration(labelText: 'Salón de clases'),
+                decoration: InputDecoration(
+                  labelText: 'Salón de clases',
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Seleccionar Color:', style: TextStyle(fontSize: 16)),
+                  Text('Seleccionar Color:', style: Theme.of(context).textTheme.bodyMedium),
                   DropdownButton<Color>(
                     value: colorSeleccionado,
-                    items: [
-                      Colors.pinkAccent,
-                      Colors.blueAccent,
-                      Colors.greenAccent,
-                      Colors.orangeAccent,
-                    ].map((color) {
+                    items: coloresDisponibles.map((color) {
                       return DropdownMenuItem(
                         value: color,
                         child: Container(width: 24, height: 24, color: color),
@@ -117,7 +128,7 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancelar'),
+                    child: Text('Cancelar', style: Theme.of(context).textTheme.bodyMedium),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -129,6 +140,10 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
                       );
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
                     child: Text(esEdicion ? 'Guardar cambios' : 'Agregar'),
                   ),
                 ],

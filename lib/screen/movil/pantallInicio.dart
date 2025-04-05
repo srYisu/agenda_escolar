@@ -1,9 +1,9 @@
 import 'package:agenda_escolar/screen/movil/pantallaResumen.dart';
 import 'package:flutter/material.dart';
-import 'package:agenda_escolar/src/colores.dart';
 import 'package:agenda_escolar/screen/movil/pantallaMaterias.dart';
 import 'package:agenda_escolar/screen/movil/pantallaCalendario.dart';
 import 'package:agenda_escolar/screen/movil/pantallaHorario.dart';
+import 'package:agenda_escolar/main.dart';
 
 class Pantallinicio extends StatefulWidget {
   const Pantallinicio({super.key});
@@ -15,42 +15,56 @@ class Pantallinicio extends StatefulWidget {
 class _PantallinicioState extends State<Pantallinicio> {
   int _currentIndex = 0;
 
+
   // Lista de pantallas para cada pestaña
   final List<Widget> _screens = [
-    Pantallaresumen(), // Pantalla de Horario
+    Pantallaresumen(),
     Pantallamaterias(),
-    Pantallacalendario(), // Pantalla de Resumen
-    Pantallahorario(), // Pantalla de Calendario
+    Pantallacalendario(),
+    Pantallahorario(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colores().colorPrimario,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           _currentIndex == 0
               ? 'Resumen'
               : _currentIndex == 1
                   ? 'Materias'
-                  :_currentIndex == 2
-                  ? 'Calendario' // Cambiar el título según la pestaña seleccionada
-                  : 'Horario',
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  : _currentIndex == 2
+                      ? 'Calendario'
+                      : 'Horario',
+          style: Theme.of(context).textTheme.bodyLarge,
+          
         ),
-        backgroundColor: Colores().colorPrimario,
+        actions: [
+          IconButton(
+            icon: Icon(
+              MyApp.isDarkModeNotifier.value ? Icons.light_mode : Icons.dark_mode,
+            ),
+            onPressed: () {
+              setState(() {
+                MyApp.isDarkModeNotifier.value = !MyApp.isDarkModeNotifier.value;
+              });
+            },
+          ),
+        ],
       ),
-      body: _screens[_currentIndex], // Mostrar la pantalla seleccionada
+      body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex, // Índice de la pestaña seleccionada
+        currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
-            _currentIndex = index; // Cambiar la pestaña seleccionada
+            _currentIndex = index;
           });
         },
-        backgroundColor: Colores().colorPrimario,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black54,
+          backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor, // Cambiado para usar el color dinámico del tema
+          selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor, // Cambiado para usar el color dinámico del tema
+          unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor, // Cambiado para usar el color dinámico del tema
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

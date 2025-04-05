@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:agenda_escolar/src/colores.dart';
 import 'package:agenda_escolar/data/materiasController.dart';
+import 'package:agenda_escolar/data/eventosController.dart';
+import 'package:agenda_escolar/data/boxEventos.dart';
 
 class BotonAgregarEvento extends StatelessWidget {
   const BotonAgregarEvento({super.key});
@@ -11,28 +12,35 @@ class BotonAgregarEvento extends StatelessWidget {
       onPressed: () {
         _mostrarFormularioAgregarEvento(context);
       },
-      backgroundColor: Colores().colorBoton,
-      child: const Icon(Icons.add, color: Colors.black),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      child: Icon(
+        Icons.add,
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
     );
   }
 
   void _mostrarFormularioAgregarEvento(BuildContext context) {
     final MateriaController materiaController = MateriaController();
+    final EventosController eventosController = EventosController();
     final List<String> materias = materiaController
         .obtenerTodas()
         .map((materia) => materia.nombreMateria)
         .toList();
 
+    final TextEditingController tituloController = TextEditingController();
+    final TextEditingController notasController = TextEditingController();
+    DateTime? fechaSeleccionada;
+    String? materiaSeleccionada;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        String? materiaSeleccionada;
-
         return Padding(
           padding: EdgeInsets.only(
             left: 16,
@@ -44,22 +52,25 @@ class BotonAgregarEvento extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Añadir Evento',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(
+                  controller: tituloController,
+                  decoration: InputDecoration(
                     labelText: 'Título',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Materia (Opcional)',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
                   items: materias
                       .map((materia) => DropdownMenuItem(
@@ -73,10 +84,12 @@ class BotonAgregarEvento extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Fecha',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
+                  readOnly: true,
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     final selectedDate = await showDatePicker(
@@ -86,26 +99,55 @@ class BotonAgregarEvento extends StatelessWidget {
                       lastDate: DateTime(2100),
                     );
                     if (selectedDate != null) {
-                      // Aquí puedes manejar la fecha seleccionada
+                      fechaSeleccionada = selectedDate;
                     }
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(
+                  controller: notasController,
+                  decoration: InputDecoration(
                     labelText: 'Nota Adicional',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    // Aquí puedes manejar el guardado del evento
-                    Navigator.pop(context);
+                    if (tituloController.text.isNotEmpty &&
+                        fechaSeleccionada != null) {
+                      // Crear un nuevo evento
+                      final nuevaMateria = materiaController.obtenerTodas().firstWhere(
+                          (materia) => materia.nombreMateria == materiaSeleccionada,
+                          orElse: () => materiaController.obtenerTodas().first);
+
+                      final nuevoEvento = Evento(
+                        titulo: tituloController.text,
+                        materia: nuevaMateria,
+                        fecha: fechaSeleccionada!,
+                        notas: notasController.text,
+                        colorMateria: nuevaMateria.colorMateria,
+                      );
+
+                      // Guardar el evento en Hive
+                      eventosController.agregarEvento(nuevoEvento);
+
+                      // Cerrar el formulario
+                      Navigator.pop(context);
+                    } else {
+                      // Mostrar un mensaje de error si faltan datos obligatorios
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Por favor, completa todos los campos obligatorios.'),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colores().colorBoton,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   child: const Text('Guardar'),
                 ),

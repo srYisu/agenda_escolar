@@ -63,27 +63,36 @@ class _FormularioHorarioState extends State<FormularioHorario> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? "Editar Horario" : "Agregar Horario"),
-        backgroundColor: Colors.blue,
+        title: Text(
+          esEdicion ? "Editar Horario" : "Agregar Horario",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ComboBox para seleccionar la materia
-            const Text(
+            Text(
               "Selecciona una materia:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             DropdownButton<String>(
               value: _materiaSeleccionada,
-              hint: const Text("Selecciona una materia"),
+              hint: Text(
+                "Selecciona una materia",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               isExpanded: true,
               items: materias.map((materia) {
                 return DropdownMenuItem<String>(
                   value: materia.nombreMateria,
-                  child: Text(materia.nombreMateria),
+                  child: Text(
+                    materia.nombreMateria,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -93,17 +102,18 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Selección de días
-            const Text(
+            Text(
               "Selecciona los días:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             Wrap(
               spacing: 8.0,
               children: _diasSemana.map((dia) {
                 return FilterChip(
-                  label: Text(dia),
+                  label: Text(
+                    dia,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   selected: _diasSeleccionados.contains(dia),
                   onSelected: (selected) {
                     setState(() {
@@ -118,11 +128,9 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
-            // Selección de hora de inicio
-            const Text(
+            Text(
               "Selecciona la hora de inicio:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             TextButton(
               onPressed: () async {
@@ -140,14 +148,13 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaInicio != null
                     ? "Hora de inicio: ${_horaInicio!.format(context)}"
                     : "Seleccionar hora de inicio",
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             const SizedBox(height: 16),
-
-            // Selección de hora de fin
-            const Text(
+            Text(
               "Selecciona la hora de fin:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             TextButton(
               onPressed: () async {
@@ -165,11 +172,10 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaFin != null
                     ? "Hora de fin: ${_horaFin!.format(context)}"
                     : "Seleccionar hora de fin",
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             const SizedBox(height: 24),
-
-            // Botón para guardar
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -189,22 +195,31 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                     );
 
                     if (esEdicion) {
-                      // Editar horario existente
                       widget.horarioExistente!.delete();
                     }
                     _horarioController.agregarMateria(horario);
 
-                    widget.onGuardar(); // Notificar que se guardó
+                    widget.onGuardar();
                     Navigator.pop(context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Por favor, completa todos los campos."),
+                      SnackBar(
+                        content: Text(
+                          "Por favor, completa todos los campos.",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                     );
                   }
                 },
-                child: Text(esEdicion ? "Guardar cambios" : "Agregar"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                child: Text(
+                  esEdicion ? "Guardar cambios" : "Agregar",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             ),
           ],

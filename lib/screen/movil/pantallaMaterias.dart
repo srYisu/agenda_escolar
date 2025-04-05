@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:agenda_escolar/src/materiaContainer.dart';
-import 'package:agenda_escolar/src/colores.dart';
 import 'package:agenda_escolar/src/botonAgregarMateria.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:agenda_escolar/data/boxMaterias.dart';
@@ -61,7 +60,7 @@ class _PantallamateriasState extends State<Pantallamaterias> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colores().colorPrimario,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: ValueListenableBuilder(
         valueListenable: box.listenable(),
         builder: (context, Box<Materia> box, _) {
@@ -155,8 +154,8 @@ class _PantallamateriasState extends State<Pantallamaterias> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _mostrarFormularioAgregarMateria,
-        backgroundColor: Colores().colorBoton,
-        child: const Icon(Icons.add, color: Colors.black),
+        backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

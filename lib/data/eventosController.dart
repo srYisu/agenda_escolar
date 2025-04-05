@@ -1,29 +1,27 @@
 import 'package:hive/hive.dart';
-import 'boxEventos.dart'; // Asegúrate que este es tu modelo de Materia
+import 'boxEventos.dart';
 
 class EventosController {
-  final Box<Evento> _box = Hive.box<Evento>('materias');
+  final Box<Evento> _box = Hive.box<Evento>('eventos');
 
-  List<Evento> obtenerTodas() {
-    return _box.values.toList();
+  List<Evento> obtenerEventosPorFecha(DateTime fecha) {
+    return _box.values
+        .where((evento) =>
+            evento.fecha.year == fecha.year &&
+            evento.fecha.month == fecha.month &&
+            evento.fecha.day == fecha.day)
+        .toList();
   }
 
-  Future<void> agregarMateria(Evento even) async {
-    await _box.add(even);
-    print('Materia agregada: ${even.titulo}');
+  Future<void> agregarEvento(Evento evento) async {
+    await _box.add(evento);
   }
 
-  Future<void> eliminarMateria(int index) async {
+  Future<void> eliminarEvento(int index) async {
     await _box.deleteAt(index);
   }
 
-  Future<void> editarMateria(int index, Evento eventoActualizado) async {
+  Future<void> editarEvento(int index, Evento eventoActualizado) async {
     await _box.putAt(index, eventoActualizado);
   }
-
-  Evento? obtenerPorIndice(int index) {
-    return _box.getAt(index);
-  }
-
-  int get cantidad => _box.length;
 }

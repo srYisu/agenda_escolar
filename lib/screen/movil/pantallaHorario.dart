@@ -1,4 +1,3 @@
-import 'package:agenda_escolar/src/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/horariosController.dart';
 import 'package:agenda_escolar/src/botonAgregarHorario.dart';
@@ -90,7 +89,7 @@ class _HorarioState extends State<Pantallahorario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colores().colorPrimario,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -101,7 +100,7 @@ class _HorarioState extends State<Pantallahorario> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_left, color: Colors.black),
+                  icon: Icon(Icons.arrow_left, color: Theme.of(context).primaryIconTheme.color),
                   onPressed: () {
                     _pageController.previousPage(
                       duration: const Duration(milliseconds: 300),
@@ -111,14 +110,10 @@ class _HorarioState extends State<Pantallahorario> {
                 ),
                 Text(
                   _diasSemana[_diaActualIndex],
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_right, color: Colors.black),
+                  icon:  Icon(Icons.arrow_right, color: Theme.of(context).primaryIconTheme.color),
                   onPressed: () {
                     _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
@@ -127,13 +122,6 @@ class _HorarioState extends State<Pantallahorario> {
                   },
                 ),
               ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              "31 de marzo",
-              style: TextStyle(fontSize: 16, color: Colors.black54),
             ),
           ),
           const SizedBox(height: 16),
@@ -189,13 +177,13 @@ class _HorarioState extends State<Pantallahorario> {
               builder: (context) => FormularioHorario(
                 onGuardar: () {
                   setState(() {}); // Actualizar la lista después de guardar
-                },
+                }, 
               ),
             ),
           );
         },
-        backgroundColor: Colores().colorBoton,
-        child: const Icon(Icons.add, color: Colors.black),
+        backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
