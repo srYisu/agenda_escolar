@@ -247,9 +247,17 @@ void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
                   },
                 ),
                 title: Text(
-                  evento.titulo,
-                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                                evento.titulo,
+                                style: evento.completado
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        )
+                                    : Theme.of(context).textTheme.bodyMedium,
+                              ),
                 subtitle: Text(
                   evento.notas,
                   style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),

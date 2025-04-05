@@ -30,10 +30,18 @@ class _PantallaresumenState extends State<Pantallaresumen> {
       _eventosSemana = _eventosController.obtenerEventosPorRango(hoy, finSemana);
     });
   }
+
+  void _toggleEventoCompletado(Evento evento) {
+    setState(() {
+      evento.completado = !evento.completado;
+      _eventosController.actualizarEvento(evento);
+    });
+  }
+
   String capitalize(String text) {
-  if (text.isEmpty) return text;
-  return text[0].toUpperCase() + text.substring(1);
-}
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +69,7 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                       ? 'Hoy'
                       : index == 1
                           ? 'Mañana'
-                          : capitalize(DateFormat('EEEE', 'es_ES').format(dia)),
+                          : capitalize(DateFormat('EEEE dd/MM', 'es_ES').format(dia)),
                   style: Theme.of(context).primaryTextTheme.bodyLarge,
                 ),
                 const SizedBox(height: 8),
@@ -93,13 +101,18 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                             color: Theme.of(context).cardColor,
                             margin: const EdgeInsets.symmetric(vertical: 4),
                             child: ListTile(
-                              leading: Icon(
-                                evento.completado
-                                    ? Icons.check_circle
-                                    : Icons.radio_button_unchecked,
-                                color: evento.completado
-                                    ? Colors.black
-                                    : Colors.black,
+                              leading: IconButton(
+                                icon: Icon(
+                                  evento.completado
+                                      ? Icons.check_circle
+                                      : Icons.radio_button_unchecked,
+                                  color: evento.completado
+                                      ? Colors.black
+                                      : Colors.grey,
+                                ),
+                                onPressed: () {
+                                  _toggleEventoCompletado(evento);
+                                },
                               ),
                               title: Text(
                                 evento.titulo,
@@ -111,7 +124,7 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                                           decoration:
                                               TextDecoration.lineThrough,
                                         )
-                                    : Theme.of(context).primaryTextTheme.bodyMedium,
+                                    : Theme.of(context).textTheme.bodyMedium,
                               ),
                               subtitle: Row(
                                 children: [
@@ -127,7 +140,7 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                                   Text(
                                     evento.materia,
                                     style:
-                                        Theme.of(context).primaryTextTheme.bodySmall,
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ],
                               ),
