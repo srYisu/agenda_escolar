@@ -237,7 +237,7 @@ void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
                     evento.completado
                         ? Icons.check_circle
                         : Icons.radio_button_unchecked,
-                    color: evento.completado ? Colors.green : Colors.grey,
+                    color: evento.completado ? Colors.black : Colors.black,
                   ),
                   onPressed: () {
                     setState(() {
@@ -248,14 +248,14 @@ void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
                 ),
                 title: Text(
                   evento.titulo,
-                  style: Theme.of(context).primaryTextTheme.bodyLarge,
+                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   evento.notas,
-                  style: Theme.of(context).primaryTextTheme.bodyMedium,
-                ),
+                  style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                ), 
                 trailing: PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, color: Colors.white),
+                  icon:  Icon(Icons.more_vert, color: Theme.of(context).primaryIconTheme.color),
                   onSelected: (value) {
                     if (value == 'Editar') {
                       _mostrarFormularioEditarEvento(context, evento);

@@ -4,6 +4,7 @@ import 'package:agenda_escolar/screen/movil/pantallaMaterias.dart';
 import 'package:agenda_escolar/screen/movil/pantallaCalendario.dart';
 import 'package:agenda_escolar/screen/movil/pantallaHorario.dart';
 import 'package:agenda_escolar/main.dart';
+import 'package:agenda_escolar/src/navegacionInferior.dart';
 
 class Pantallinicio extends StatefulWidget {
   const Pantallinicio({super.key});
@@ -49,41 +50,23 @@ class _PantallinicioState extends State<Pantallinicio> {
             onPressed: () {
               setState(() {
                 MyApp.isDarkModeNotifier.value = !MyApp.isDarkModeNotifier.value;
+                print('Background color: ${Theme.of(context).bottomNavigationBarTheme.backgroundColor}');
+                print('Selected item color: ${Theme.of(context).bottomNavigationBarTheme.selectedItemColor}');
+                print('Unselected item color: ${Theme.of(context).bottomNavigationBarTheme.unselectedItemColor}');
               });
             },
           ),
         ],
       ),
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-          backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor, // Cambiado para usar el color dinámico del tema
-          selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor, // Cambiado para usar el color dinámico del tema
-          unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor, // Cambiado para usar el color dinámico del tema
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Materias',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendario',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            label: 'Horario',
-          ),
-        ],
-      ),
+      bottomNavigationBar: NavegacionInferior(
+  currentIndex: _currentIndex,
+  onTap: (index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  },
+),
     );
   }
 }

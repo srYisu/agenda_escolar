@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
 import 'package:agenda_escolar/data/boxEventos.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:agenda_escolar/src/botonAgregarEventro.dart';
 
 class Pantallaresumen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _PantallaresumenState extends State<Pantallaresumen> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting('es_ES', null);
     _cargarEventosSemana();
   }
 
@@ -28,16 +30,16 @@ class _PantallaresumenState extends State<Pantallaresumen> {
       _eventosSemana = _eventosController.obtenerEventosPorRango(hoy, finSemana);
     });
   }
+  String capitalize(String text) {
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1);
+}
 
   @override
   Widget build(BuildContext context) {
     final DateTime hoy = DateTime.now();
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Resumen Semanal'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
       body: ListView.builder(
         itemCount: 8, // Hoy + 7 días
         itemBuilder: (context, index) {
@@ -59,8 +61,8 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                       ? 'Hoy'
                       : index == 1
                           ? 'Mañana'
-                          : DateFormat('EEEE dd/MM').format(dia),
-                  style: Theme.of(context).textTheme.headlineSmall,
+                          : capitalize(DateFormat('EEEE', 'es_ES').format(dia)),
+                  style: Theme.of(context).primaryTextTheme.bodyLarge,
                 ),
                 const SizedBox(height: 8),
                 eventosDelDia.isEmpty
@@ -75,12 +77,12 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                           children: [
                             Text(
                               'Eventos pendientes',
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Añade eventos',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
@@ -96,20 +98,20 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                                     ? Icons.check_circle
                                     : Icons.radio_button_unchecked,
                                 color: evento.completado
-                                    ? Colors.green
-                                    : Colors.grey,
+                                    ? Colors.black
+                                    : Colors.black,
                               ),
                               title: Text(
                                 evento.titulo,
                                 style: evento.completado
                                     ? Theme.of(context)
                                         .textTheme
-                                        .bodyLarge
+                                        .bodyMedium
                                         ?.copyWith(
                                           decoration:
                                               TextDecoration.lineThrough,
                                         )
-                                    : Theme.of(context).textTheme.bodyLarge,
+                                    : Theme.of(context).primaryTextTheme.bodyMedium,
                               ),
                               subtitle: Row(
                                 children: [
@@ -125,7 +127,7 @@ class _PantallaresumenState extends State<Pantallaresumen> {
                                   Text(
                                     evento.materia,
                                     style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                                        Theme.of(context).primaryTextTheme.bodySmall,
                                   ),
                                 ],
                               ),

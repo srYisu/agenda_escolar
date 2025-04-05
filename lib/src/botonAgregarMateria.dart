@@ -48,6 +48,7 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: const Text('Seleccionar Color'),
           content: SingleChildScrollView(
             child: BlockPicker(

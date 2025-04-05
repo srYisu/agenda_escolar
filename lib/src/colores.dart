@@ -13,9 +13,9 @@ class AppColors {
       bodySmall: TextStyle(color: Colors.black54, fontSize: 14, fontWeight: FontWeight.w500)
     ),
     primaryTextTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-      bodyMedium: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-      bodySmall: TextStyle(color: Colors.white70),
+      bodyLarge: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+      bodyMedium: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600),
+      bodySmall: TextStyle(color: Colors.black54, fontSize: 14, fontWeight: FontWeight.w500),
     ),
 
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -41,7 +41,7 @@ class AppColors {
     primaryTextTheme: const TextTheme(
       bodyLarge: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
       bodyMedium: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-      bodySmall: TextStyle(color: Colors.white70),
+      bodySmall: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w500),
     ),
 
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -49,7 +49,7 @@ class AppColors {
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white70,
     ),
-    iconTheme: const IconThemeData(color: Colors.black),
+    iconTheme: const IconThemeData(color: Colors.white),
     primaryIconTheme: const IconThemeData(color: Colors.white)
 
   );
