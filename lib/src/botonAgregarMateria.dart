@@ -1,6 +1,6 @@
-import 'package:agenda_escolar/data/boxMaterias.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_colorpicker/flutter_colorpicker.dart'; // Asegúrate de agregar esta dependencia en pubspec.yaml
+import 'package:agenda_escolar/data/boxMaterias.dart';
 
 class FormularioAgregarMateria extends StatefulWidget {
   final Function agregarMateria;
@@ -13,7 +13,8 @@ class FormularioAgregarMateria extends StatefulWidget {
   });
 
   @override
-  State<FormularioAgregarMateria> createState() => _FormularioAgregarMateriaState();
+  State<FormularioAgregarMateria> createState() =>
+      _FormularioAgregarMateriaState();
 }
 
 class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
@@ -28,7 +29,8 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
     final materia = widget.materiaExistente;
 
     nombreController = TextEditingController(text: materia?.nombreMateria ?? '');
-    profesorController = TextEditingController(text: materia?.nombreProfesor ?? '');
+    profesorController =
+        TextEditingController(text: materia?.nombreProfesor ?? '');
     salonController = TextEditingController(text: materia?.salonClases ?? '');
     colorSeleccionado = materia?.color ?? Colors.pinkAccent;
   }
@@ -41,19 +43,43 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
     super.dispose();
   }
 
+  void _mostrarSelectorDeColor() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar Color'),
+          content: SingleChildScrollView(
+            child: BlockPicker(
+              pickerColor: colorSeleccionado,
+              onColorChanged: (Color color) {
+                setState(() {
+                  colorSeleccionado = color;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Seleccionar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final esEdicion = widget.materiaExistente != null;
-    final coloresDisponibles = [
-  Colors.pinkAccent,
-  Colors.blueAccent,
-  Colors.greenAccent,
-  Colors.orangeAccent,
-];
 
-colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
-    ? widget.materiaExistente!.color
-    : Colors.pinkAccent;
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -62,7 +88,6 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
         right: 16,
       ),
       child: SingleChildScrollView(
-
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -105,20 +130,23 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Seleccionar Color:', style: Theme.of(context).textTheme.bodyMedium),
-                  DropdownButton<Color>(
-                    value: colorSeleccionado,
-                    items: coloresDisponibles.map((color) {
-                      return DropdownMenuItem(
-                        value: color,
-                        child: Container(width: 24, height: 24, color: color),
-                      );
-                    }).toList(),
-                    onChanged: (Color? newColor) {
-                      if (newColor != null) {
-                        setState(() => colorSeleccionado = newColor);
-                      }
-                    },
+                  Text(
+                    'Color Seleccionado:',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  GestureDetector(
+                    onTap: _mostrarSelectorDeColor,
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: colorSeleccionado,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -128,7 +156,10 @@ colorSeleccionado = coloresDisponibles.contains(widget.materiaExistente?.color)
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Cancelar', style: Theme.of(context).textTheme.bodyMedium),
+                    child: Text(
+                      'Cancelar',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {

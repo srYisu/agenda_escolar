@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:agenda_escolar/src/botonAgregarEventro.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
+import 'package:agenda_escolar/data/materiasController.dart';
 import 'package:agenda_escolar/data/boxEventos.dart';
 import 'package:intl/intl.dart';
+import 'package:agenda_escolar/data/boxMaterias.dart';
 
 class Pantallacalendario extends StatefulWidget {
   const Pantallacalendario({super.key});
@@ -37,12 +39,18 @@ class _CalendarioState extends State<Pantallacalendario> {
       _cargarEventosDelDia(_selectedDay!);
     });
   }
-  void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
+void _mostrarFormularioEditarEvento(BuildContext context, Evento evento) {
   final TextEditingController tituloController =
       TextEditingController(text: evento.titulo);
   final TextEditingController notasController =
       TextEditingController(text: evento.notas);
   DateTime? fechaSeleccionada = evento.fecha;
+  final MateriaController materiaController = MateriaController();
+  final List<Materia> materias = materiaController.obtenerTodas();
+  Materia? materiaSeleccionada = materias.firstWhere(
+    (m) => m.nombreMateria == evento.materia,
+    orElse: () => materias.first,
+  );
 
   showModalBottomSheet(
     context: context,
@@ -75,6 +83,24 @@ class _CalendarioState extends State<Pantallacalendario> {
                   border: const OutlineInputBorder(),
                   labelStyle: Theme.of(context).textTheme.bodyMedium,
                 ),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<Materia>(
+                decoration: InputDecoration(
+                  labelText: 'Materia',
+                  border: const OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+                ),
+                value: materiaSeleccionada,
+                items: materias
+                    .map((materia) => DropdownMenuItem(
+                          value: materia,
+                          child: Text(materia.nombreMateria),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  materiaSeleccionada = value;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -121,6 +147,10 @@ class _CalendarioState extends State<Pantallacalendario> {
                       evento.titulo = tituloController.text;
                       evento.notas = notasController.text;
                       evento.fecha = fechaSeleccionada!;
+                      evento.materia = materiaSeleccionada?.nombreMateria ?? '';
+                      evento.colorMateria =
+                          materiaSeleccionada?.colorMateria ??
+                              Colors.blue.value;
                       _eventosController.actualizarEvento(evento);
                       _cargarEventosDelDia(_selectedDay!);
                     });
