@@ -17,18 +17,19 @@ class EventoAdapter extends TypeAdapter<Evento> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Evento(
-      materia: fields[1] as Materia,
       titulo: fields[0] as String,
+      materia: fields[1] as String,
       fecha: fields[2] as DateTime,
       notas: fields[3] as String,
       colorMateria: fields[4] as int,
+      completado: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Evento obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.titulo)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class EventoAdapter extends TypeAdapter<Evento> {
       ..writeByte(3)
       ..write(obj.notas)
       ..writeByte(4)
-      ..write(obj.colorMateria);
+      ..write(obj.colorMateria)
+      ..writeByte(5)
+      ..write(obj.completado);
   }
 
   @override

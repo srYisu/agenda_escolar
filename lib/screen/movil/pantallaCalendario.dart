@@ -75,47 +75,55 @@ class _CalendarioState extends State<Pantallacalendario> {
           Text(DateFormat('dd/MM/yyyy').format(_focusedDay),
               style: Theme.of(context).textTheme.bodyMedium),
           Expanded(
-            child: _eventosDelDia.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No hay eventos para este día.',
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _eventosDelDia.length,
-                    itemBuilder: (context, index) {
-                      final evento = _eventosDelDia[index];
-                      return Card(
-                        color: evento.colorMateria != null
-                            ? Color(evento.colorMateria)
-                            : Theme.of(context).primaryColor,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: ListTile(
-                          title: Text(
-                            evento.titulo,
-                            style: Theme.of(context).primaryTextTheme.bodyLarge,
-                          ),
-                          subtitle: Text(
-                            evento.notas,
-                            style: Theme.of(context).primaryTextTheme.bodyMedium,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.white),
-                                onPressed: () {
-                                  _eliminarEvento(evento);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+  child: _eventosDelDia.isEmpty
+      ? const Center(
+          child: Text(
+            'No hay eventos para este día.',
           ),
+        )
+      : ListView.builder(
+          itemCount: _eventosDelDia.length,
+          itemBuilder: (context, index) {
+            final evento = _eventosDelDia[index];
+            return Card(
+              color: evento.colorMateria != null
+                  ? Color(evento.colorMateria)
+                  : Theme.of(context).primaryColor,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                leading: IconButton(
+                  icon: Icon(
+                    evento.completado
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    color: evento.completado ? Colors.green : Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      evento.completado = !evento.completado;
+                      _eventosController.actualizarEvento(evento);
+                    });
+                  },
+                ),
+                title: Text(
+                  evento.titulo,
+                  style: Theme.of(context).primaryTextTheme.bodyLarge,
+                ),
+                subtitle: Text(
+                  evento.notas,
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.white),
+                  onPressed: () {
+                    _eliminarEvento(evento);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+),
         ],
       ),
       floatingActionButton: const BotonAgregarEvento(),

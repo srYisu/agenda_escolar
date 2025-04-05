@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/materiasController.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
 import 'package:agenda_escolar/data/boxEventos.dart';
+import 'package:agenda_escolar/data/boxMaterias.dart';
 
 class BotonAgregarEvento extends StatelessWidget {
   const BotonAgregarEvento({super.key});
@@ -23,15 +24,13 @@ class BotonAgregarEvento extends StatelessWidget {
   void _mostrarFormularioAgregarEvento(BuildContext context) {
     final MateriaController materiaController = MateriaController();
     final EventosController eventosController = EventosController();
-    final List<String> materias = materiaController
-        .obtenerTodas()
-        .map((materia) => materia.nombreMateria)
-        .toList();
+    final List<Materia> materias = materiaController.obtenerTodas();
+    final List<String> nombresMaterias = materias.map((m) => m.nombreMateria).toList();
 
     final TextEditingController tituloController = TextEditingController();
     final TextEditingController notasController = TextEditingController();
     DateTime? fechaSeleccionada;
-    String? materiaSeleccionada;
+    String? nombreMateriaSeleccionada;
 
     showModalBottomSheet(
       context: context,
@@ -72,14 +71,14 @@ class BotonAgregarEvento extends StatelessWidget {
                     border: const OutlineInputBorder(),
                     labelStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  items: materias
-                      .map((materia) => DropdownMenuItem(
-                            value: materia,
-                            child: Text(materia),
+                  items: nombresMaterias
+                      .map((nombre) => DropdownMenuItem(
+                            value: nombre,
+                            child: Text(nombre),
                           ))
                       .toList(),
                   onChanged: (value) {
-                    materiaSeleccionada = value;
+                    nombreMateriaSeleccionada = value;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -118,29 +117,29 @@ class BotonAgregarEvento extends StatelessWidget {
                   onPressed: () {
                     if (tituloController.text.isNotEmpty &&
                         fechaSeleccionada != null) {
-                      // Crear un nuevo evento
-                      final nuevaMateria = materiaController.obtenerTodas().firstWhere(
-                          (materia) => materia.nombreMateria == materiaSeleccionada,
-                          orElse: () => materiaController.obtenerTodas().first);
+                      // Buscar el color asociado al nombre de la materia, si existe
+                      int colorFinal = Colors.blue.value; // Valor por defecto
+                      final materiaEncontrada = materias.firstWhere(
+                        (m) => m.nombreMateria == nombreMateriaSeleccionada,
+                        orElse: () => Materia(nombreMateria: '', colorMateria: Colors.blue.value, nombreProfesor: '', salonClases: ''),
+                      );
+                      colorFinal = materiaEncontrada.colorMateria;
 
                       final nuevoEvento = Evento(
                         titulo: tituloController.text,
-                        materia: nuevaMateria,
+                        materia: nombreMateriaSeleccionada ?? '',
                         fecha: fechaSeleccionada!,
                         notas: notasController.text,
-                        colorMateria: nuevaMateria.colorMateria,
+                        colorMateria: colorFinal,
                       );
 
-                      // Guardar el evento en Hive
                       eventosController.agregarEvento(nuevoEvento);
-
-                      // Cerrar el formulario
                       Navigator.pop(context);
                     } else {
-                      // Mostrar un mensaje de error si faltan datos obligatorios
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Por favor, completa todos los campos obligatorios.'),
+                          content: Text(
+                              'Por favor, completa todos los campos obligatorios.'),
                         ),
                       );
                     }

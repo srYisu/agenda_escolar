@@ -1,8 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'boxMaterias.dart'; // Importa la clase Materia
 import 'package:flutter/material.dart';
 
-part 'boxEventos.g.dart';
+part 'boxEventos.g.dart'; // Asegúrate de que el nombre coincida con tu archivo .g.dart
 
 @HiveType(typeId: 2)
 class Evento extends HiveObject {
@@ -10,7 +9,7 @@ class Evento extends HiveObject {
   String titulo;
 
   @HiveField(1)
-  Materia materia;
+  String materia; // Cambiado de Materia a String
 
   @HiveField(2)
   DateTime fecha;
@@ -21,13 +20,17 @@ class Evento extends HiveObject {
   @HiveField(4)
   int colorMateria; // Guardamos también el color
 
+  @HiveField(5)
+  bool completado; // Nuevo campo para marcar si el evento está completado
+
   Evento({
-    required this.materia,
     required this.titulo,
+    required this.materia,
     required this.fecha,
     required this.notas,
     required this.colorMateria,
-  }); // Copiamos el color al crear
+    this.completado = false, // Por defecto está en false (no completado)
+  });
 
-  Color get color => Color(materia.colorMateria); // Acceso directo al color
+  Color get color => Color(colorMateria); // Acceso directo al color
 }

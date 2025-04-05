@@ -17,7 +17,12 @@ void main() async {
   await Hive.openBox<Horario>('horarios');
   await Hive.openBox<Evento>('eventos');
 
-  runApp(const MyApp());
+  //await Hive.box<Materia>('materias').clear();
+  //await Hive.box<Horario>('horarios').clear();
+  //await Hive.box<Evento>('eventos').clear();
+
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
