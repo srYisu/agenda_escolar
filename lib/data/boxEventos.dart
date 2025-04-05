@@ -27,7 +27,6 @@ class Evento extends HiveObject {
     required this.fecha,
     required this.notas,
     required this.colorMateria,
-
   }); // Copiamos el color al crear
 
   Color get color => Color(materia.colorMateria); // Acceso directo al color

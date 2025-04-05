@@ -3,6 +3,7 @@ import 'package:agenda_escolar/src/botonAgregarEventro.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
 import 'package:agenda_escolar/data/boxEventos.dart';
+import 'package:intl/intl.dart';
 
 class Pantallacalendario extends StatefulWidget {
   const Pantallacalendario({super.key});
@@ -27,6 +28,13 @@ class _CalendarioState extends State<Pantallacalendario> {
   void _cargarEventosDelDia(DateTime dia) {
     setState(() {
       _eventosDelDia = _eventosController.obtenerEventosPorFecha(dia);
+    });
+  }
+
+  void _eliminarEvento(Evento evento) {
+    setState(() {
+      _eventosController.eliminarEvento(evento);
+      _cargarEventosDelDia(_selectedDay!);
     });
   }
 
@@ -64,6 +72,8 @@ class _CalendarioState extends State<Pantallacalendario> {
             ),
           ),
           const SizedBox(height: 16),
+          Text(DateFormat('dd/MM/yyyy').format(_focusedDay),
+              style: Theme.of(context).textTheme.bodyMedium),
           Expanded(
             child: _eventosDelDia.isEmpty
                 ? const Center(
@@ -78,7 +88,7 @@ class _CalendarioState extends State<Pantallacalendario> {
                       return Card(
                         color: evento.colorMateria != null
                             ? Color(evento.colorMateria)
-                            : Theme.of(context).primaryColor, // Color predeterminado si no hay materia
+                            : Theme.of(context).primaryColor,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         child: ListTile(
@@ -90,9 +100,16 @@ class _CalendarioState extends State<Pantallacalendario> {
                             evento.notas,
                             style: Theme.of(context).primaryTextTheme.bodyMedium,
                           ),
-                          trailing: Text(
-                            '${evento.fecha.day}/${evento.fecha.month}/${evento.fecha.year}',
-                            style: Theme.of(context).primaryTextTheme.bodyMedium,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.white),
+                                onPressed: () {
+                                  _eliminarEvento(evento);
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       );

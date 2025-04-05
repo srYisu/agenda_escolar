@@ -17,11 +17,15 @@ class EventosController {
     await _box.add(evento);
   }
 
-  Future<void> eliminarEvento(int index) async {
-    await _box.deleteAt(index);
+  Future<void> eliminarEvento(Evento evento) async {
+    await _box.delete(evento.key);
   }
 
   Future<void> editarEvento(int index, Evento eventoActualizado) async {
     await _box.putAt(index, eventoActualizado);
+  }
+
+  Future<void> actualizarEvento(Evento evento) async {
+  await evento.save();
   }
 }
