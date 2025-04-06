@@ -113,8 +113,9 @@ class _PantallamateriasState extends State<Pantallamaterias> {
           final confirmar = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text("Eliminar"),
-              content: const Text("¿Estás seguro de eliminar esta materia?"),
+              title:  Text("Eliminar", style: Theme.of(context).primaryTextTheme.bodyLarge),
+              backgroundColor: Theme.of(context).cardColor,
+              content:  Text("¿Estás seguro de eliminar esta materia?", style: Theme.of(context).primaryTextTheme.bodySmall),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
