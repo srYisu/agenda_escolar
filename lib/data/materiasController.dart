@@ -26,5 +26,4 @@ class MateriaController {
   }
 
   int get cantidad => _box.length;
-  
 }

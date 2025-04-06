@@ -24,6 +24,11 @@ void main() async {
   await Hive.openBox<Evento>('eventos');
   await Hive.openBox<Configuracion>('configuracion');
 
+  //await Hive.box('materias').clear();
+  //await Hive.box('horarios').clear();
+  //await Hive.box('eventos').clear();
+  //await Hive.box('configuracion').clear();
+
   // Obtener configuración inicial
   final configuracionController = ConfiguracionController();
   final configuracion = configuracionController.obtenerConfiguracion();

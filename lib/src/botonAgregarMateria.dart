@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:agenda_escolar/data/boxMaterias.dart';
+import 'package:agenda_escolar/src/colores.dart';
 
 class FormularioAgregarMateria extends StatefulWidget {
   final Function agregarMateria;
@@ -49,7 +50,7 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: const Text('Seleccionar Color'),
+          title:  Text('Seleccionar Color', style:Theme.of(context).textTheme.bodyLarge),
           content: SingleChildScrollView(
             child: BlockPicker(
               pickerColor: colorSeleccionado,
@@ -78,22 +79,24 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final esEdicion = widget.materiaExistente != null;
-  return Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
+  Widget build(BuildContext context) {
+    final esEdicion = widget.materiaExistente != null;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(16),
+          topEnd: Radius.circular(16),
+        ),
       ),
-    ),
-    padding: const EdgeInsets.all(16),
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 500,
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
       ),
-      child: SingleChildScrollView(
+      child: Form(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -106,28 +109,28 @@ Widget build(BuildContext context) {
               controller: nombreController,
               decoration: InputDecoration(
                 labelText: 'Nombre de la Materia',
+                border: const OutlineInputBorder(),
                 labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
-                border: OutlineInputBorder(),
               ),
-              style: Theme.of(context).primaryTextTheme.bodyMedium
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: profesorController,
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Nombre del Profesor',
+                border: const OutlineInputBorder(),
                 labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
-                border: OutlineInputBorder(),
               ),
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: salonController,
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Salón de Clases',
+                border: const OutlineInputBorder(),
                 labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
-                border: OutlineInputBorder(),
               ),
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
@@ -158,28 +161,23 @@ Widget build(BuildContext context) {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                if (nombreController.text.isNotEmpty) {
-                  widget.agregarMateria(
-                    nombreController.text,
-                    profesorController.text,
-                    salonController.text,
-                    colorSeleccionado,
-                  );
-                  Navigator.of(context).pop();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Por favor, completa todos los campos.'),
-                    ),
-                  );
-                }
+                widget.agregarMateria(
+                  nombreController.text,
+                  profesorController.text,
+                  salonController.text,
+                  colorSeleccionado,
+                );
+                Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
               child: Text(esEdicion ? 'Guardar Cambios' : 'Agregar'),
             ),
           ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -190,42 +190,51 @@ class _CalendarioState extends State<Pantallacalendario> {
       body: Column(
         children: [
           TableCalendar(
-            locale: 'es_ES',
-            firstDay: DateTime.utc(2000, 1, 1),
-            lastDay: DateTime.utc(2100, 12, 31),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _cargarEventosDelDia(selectedDay);
-              });
-            },
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
-              defaultTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+  locale: 'es_ES',
+  firstDay: DateTime.utc(2000, 1, 1),
+  lastDay: DateTime.utc(2100, 12, 31),
+  focusedDay: _focusedDay,
+  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+  onDaySelected: (selectedDay, focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+      _cargarEventosDelDia(selectedDay);
+    });
+  },
+  eventLoader: (day) {
+    // Cargar eventos del día
+    return _eventosController.obtenerEventosPorFecha(day);
+  },
+  calendarStyle: CalendarStyle(
+    todayDecoration: BoxDecoration(
+      color: Theme.of(context).primaryColor,
+      shape: BoxShape.circle,
+    ),
+    defaultTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
           fontSize: 16, // Cambia el tamaño de los números de los días normales
         ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-            ),
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
-            ),
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontSize: 15, // Ajusta el tamaño del texto de los días de la semana
-                ),
-            ),
-            daysOfWeekHeight: 30,
-          ),
+    selectedDecoration: BoxDecoration(
+      color: Colors.blue,
+      shape: BoxShape.circle,
+    ),
+    markerDecoration: BoxDecoration(
+      shape: BoxShape.circle,
+    ),
+    markersMaxCount: 1, // Mostrar solo un marcador por día
+    markersAlignment: Alignment.bottomCenter, // Alinear el marcador debajo del número
+  ),
+  headerStyle: HeaderStyle(
+    formatButtonVisible: false,
+    titleCentered: true,
+  ),
+  daysOfWeekStyle: DaysOfWeekStyle(
+    weekdayStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          fontSize: 15, // Ajusta el tamaño del texto de los días de la semana
+        ),
+  ),
+  daysOfWeekHeight: 30,
+),
           const SizedBox(height: 16),
           Text(DateFormat('dd/MM/yyyy').format(_focusedDay),
               style: Theme.of(context).textTheme.bodyMedium),
