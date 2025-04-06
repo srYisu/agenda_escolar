@@ -83,6 +83,7 @@ class _CalendarioState extends State<Pantallacalendario> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: tituloController,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(
                     labelText: 'Título',
                     border: const OutlineInputBorder(),
@@ -91,6 +92,7 @@ class _CalendarioState extends State<Pantallacalendario> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<Materia>(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(
                     labelText: 'Materia',
                     border: const OutlineInputBorder(),
@@ -109,6 +111,7 @@ class _CalendarioState extends State<Pantallacalendario> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: notasController,
                   decoration: InputDecoration(
                     labelText: 'Nota Adicional',
@@ -119,6 +122,7 @@ class _CalendarioState extends State<Pantallacalendario> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: fechaController,
                   decoration: InputDecoration(
                     labelText: 'Fecha',
