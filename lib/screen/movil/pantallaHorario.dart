@@ -151,46 +151,57 @@ class _HorarioState extends State<Pantallahorario> {
           ),
           const SizedBox(height: 16),
           // PageView para los horarios
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _diasSemana.length,
-              onPageChanged: _cambiarDia,
-              itemBuilder: (context, index) {
-                // Asegurar que los días se mapean correctamente
-                final horarios = _horarioController.obtenerTodas().where((horario) {
-                  return horario.diasSemana.contains(_diasSemana[index]);
-                }).toList();
+Expanded(
+  child: PageView.builder(
+    controller: _pageController,
+    itemCount: _diasSemana.length,
+    onPageChanged: _cambiarDia,
+    itemBuilder: (context, index) {
+      // Filtrar los horarios para el día actual
+      final horarios = _horarioController.obtenerTodas().where((horario) {
+        return horario.diasSemana.contains(_diasSemana[index]);
+      }).toList();
 
-                // Ordenar los horarios por hora de inicio
-                horarios.sort((a, b) {
-                  final TimeOfDay horaInicioA = _convertirStringATimeOfDay(a.horaInicio);
-                  final TimeOfDay horaInicioB = _convertirStringATimeOfDay(b.horaInicio);
-                  return horaInicioA.hour.compareTo(horaInicioB.hour) != 0
-                      ? horaInicioA.hour.compareTo(horaInicioB.hour)
-                      : horaInicioA.minute.compareTo(horaInicioB.minute);
-                });
+      // Ordenar los horarios por hora de inicio
+      horarios.sort((a, b) {
+        final TimeOfDay horaInicioA = _convertirStringATimeOfDay(a.horaInicio);
+        final TimeOfDay horaInicioB = _convertirStringATimeOfDay(b.horaInicio);
+        return horaInicioA.hour.compareTo(horaInicioB.hour) != 0
+            ? horaInicioA.hour.compareTo(horaInicioB.hour)
+            : horaInicioA.minute.compareTo(horaInicioB.minute);
+      });
 
-                return ListView.builder(
-  itemCount: horarios.length,
-  itemBuilder: (context, horarioIndex) {
-    final horario = horarios[horarioIndex];
-    final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
-
-    return Horariocontainer(
-      nombreMateria: horario.materia.nombreMateria,
-      horaInicio: horario.horaInicio,
-      horaFin: horario.horaFin,
-      colorMateria: horario.color,
-      esActivo: esActivo,
-      onEditar: () => _editarHorario(horario),
-      onEliminar: () => _eliminarHorario(horarioIndex), // Pasar el índice correcto
-    );
-  },
-);
-              },
-            ),
+      // Mostrar mensaje si no hay horarios
+      if (horarios.isEmpty) {
+        return Center(
+          child: Text(
+            'No hay horarios disponibles para este día.',
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
+        );
+      }
+      
+      // Construir la lista de horarios
+      return ListView.builder(
+        itemCount: horarios.length,
+        itemBuilder: (context, horarioIndex) {
+          final horario = horarios[horarioIndex];
+          final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
+
+          return Horariocontainer(
+            nombreMateria: horario.materia.nombreMateria,
+            horaInicio: horario.horaInicio,
+            horaFin: horario.horaFin,
+            colorMateria: horario.color,
+            esActivo: esActivo,
+            onEditar: () => _editarHorario(horario),
+            onEliminar: () => _eliminarHorario(horarioIndex),
+          );
+        },
+      );
+    },
+  ),
+),
         ],
       ),
       floatingActionButton: FloatingActionButton(
