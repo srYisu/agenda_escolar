@@ -29,18 +29,9 @@ class _HorarioState extends State<Pantallahorario> {
   ];
   int _diaActualIndex = 1;
 
-  void _eliminarHorario(int index) {
-  final horarios = _horarioController.obtenerTodas().where((horario) {
-    return horario.diasSemana.contains(_diasSemana[_diaActualIndex]);
-  }).toList();
-
-  if (index >= 0 && index < horarios.length) {
-    final horario = horarios[index];
-    _horarioController.eliminarMateria(horario.key as int); // Usar la clave de Hive
-    setState(() {}); // Actualizar la lista después de eliminar
-  } else {
-    print('Índice fuera de rango: $index');
-  }
+void _eliminarHorario(Horario horario) {
+  _horarioController.eliminarMateria(horario.key as int); // Usar la clave de Hive
+  setState(() {}); // Actualizar la lista después de eliminar
 }
 
   void _editarHorario(Horario horario) {
@@ -182,23 +173,23 @@ Expanded(
       }
       
       // Construir la lista de horarios
-      return ListView.builder(
-        itemCount: horarios.length,
-        itemBuilder: (context, horarioIndex) {
-          final horario = horarios[horarioIndex];
-          final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
+return ListView.builder(
+  itemCount: horarios.length,
+  itemBuilder: (context, horarioIndex) {
+    final horario = horarios[horarioIndex];
+    final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
 
-          return Horariocontainer(
-            nombreMateria: horario.materia.nombreMateria,
-            horaInicio: horario.horaInicio,
-            horaFin: horario.horaFin,
-            colorMateria: horario.color,
-            esActivo: esActivo,
-            onEditar: () => _editarHorario(horario),
-            onEliminar: () => _eliminarHorario(horarioIndex),
-          );
-        },
-      );
+    return Horariocontainer(
+      nombreMateria: horario.materia.nombreMateria,
+      horaInicio: horario.horaInicio,
+      horaFin: horario.horaFin,
+      colorMateria: horario.color,
+      esActivo: esActivo,
+      onEditar: () => _editarHorario(horario),
+      onEliminar: () => _eliminarHorario(horario), // Pasar el objeto completo
+    );
+  },
+);
     },
   ),
 ),
