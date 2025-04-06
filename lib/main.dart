@@ -22,7 +22,11 @@ void main() async {
   await Hive.openBox<Materia>('materias');
   await Hive.openBox<Horario>('horarios');
   await Hive.openBox<Evento>('eventos');
-  await Hive.openBox<Configuracion>('configuracion');
+  try {
+    await Hive.openBox<Configuracion>('configuracion');
+  }   catch (e) {
+    print('Error al abrir la caja de configuración: $e');
+  }
 
   //await Hive.box('materias').clear();
   //await Hive.box('horarios').clear();
@@ -31,7 +35,11 @@ void main() async {
 
   // Obtener configuración inicial
   final configuracionController = ConfiguracionController();
-  final configuracion = configuracionController.obtenerConfiguracion();
+final configuracion = configuracionController.obtenerConfiguracion();
+print('Modo oscuro inicial: ${configuracion.isDarkMode}');
+
+ // Inicializar ValueNotifier para el modo oscuro
+  MyApp.isDarkModeNotifier = ValueNotifier(configuracion.isDarkMode);
 
   runApp(MyApp(isDarkMode: configuracion.isDarkMode));
 }
@@ -47,15 +55,15 @@ class MyApp extends StatelessWidget {
       valueListenable: MyApp.isDarkModeNotifier,
       builder: (context, isDarkMode, child) {
         return MaterialApp(
-          theme: AppColors.getTheme(false),
-          darkTheme: AppColors.getTheme(true),
+          theme: AppColors.getTheme(isDarkMode),
+          darkTheme: AppColors.getTheme(isDarkMode),
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: const Pantallinicio(),
+          home: Pantallinicio(),
           debugShowCheckedModeBanner: false,
         );
       },
     );
   }
 
-  static final ValueNotifier<bool> isDarkModeNotifier = ValueNotifier(false);
+  static late final ValueNotifier<bool> isDarkModeNotifier;
 }

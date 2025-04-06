@@ -14,9 +14,14 @@ class ConfiguracionController {
     return _box.values.first;
   }
 
-  Future<void> actualizarModoOscuro(bool isDarkMode) async {
-    final configuracion = obtenerConfiguracion();
+Future<void> actualizarModoOscuro(bool isDarkMode) async {
+  if (_box.isEmpty) {
+    final configuracion = Configuracion(isDarkMode: isDarkMode);
+    await _box.add(configuracion);
+  } else {
+    final configuracion = _box.values.first;
     configuracion.isDarkMode = isDarkMode;
     await configuracion.save();
   }
+}
 }

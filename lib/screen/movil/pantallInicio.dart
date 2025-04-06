@@ -42,16 +42,17 @@ class _PantallinicioState extends State<Pantallinicio> {
         style: Theme.of(context).textTheme.bodyLarge,
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              MyApp.isDarkModeNotifier.value ? Icons.light_mode : Icons.dark_mode,
-            ),
-            onPressed: () async {
-              final isDarkMode = !MyApp.isDarkModeNotifier.value;
-              MyApp.isDarkModeNotifier.value = isDarkMode;
-              await _configuracionController.actualizarModoOscuro(isDarkMode);
-            },
-          ),
+IconButton(
+  icon: Icon(
+    MyApp.isDarkModeNotifier.value ? Icons.light_mode : Icons.dark_mode,
+  ),
+  onPressed: () async {
+    final isDarkMode = !MyApp.isDarkModeNotifier.value;
+    MyApp.isDarkModeNotifier.value = isDarkMode;
+    await _configuracionController.actualizarModoOscuro(isDarkMode);
+    print('Modo oscuro actualizado: $isDarkMode');
+  },
+),
         ],
       ),
       body: _screens[_currentIndex],

@@ -189,7 +189,7 @@ class _CalendarioState extends State<Pantallacalendario> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          TableCalendar(
+TableCalendar(
   locale: 'es_ES',
   firstDay: DateTime.utc(2000, 1, 1),
   lastDay: DateTime.utc(2100, 12, 31),
@@ -203,7 +203,6 @@ class _CalendarioState extends State<Pantallacalendario> {
     });
   },
   eventLoader: (day) {
-    // Cargar eventos del día
     return _eventosController.obtenerEventosPorFecha(day);
   },
   calendarStyle: CalendarStyle(
@@ -212,17 +211,15 @@ class _CalendarioState extends State<Pantallacalendario> {
       shape: BoxShape.circle,
     ),
     defaultTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          fontSize: 16, // Cambia el tamaño de los números de los días normales
+          fontSize: 16,
         ),
     selectedDecoration: BoxDecoration(
       color: Colors.blue,
       shape: BoxShape.circle,
     ),
-    markerDecoration: BoxDecoration(
-      shape: BoxShape.circle,
-    ),
-    markersMaxCount: 1, // Mostrar solo un marcador por día
-    markersAlignment: Alignment.bottomCenter, // Alinear el marcador debajo del número
+    markerDecoration: const BoxDecoration(shape: BoxShape.circle),
+    markersMaxCount: 1,
+    markersAlignment: Alignment.bottomCenter,
   ),
   headerStyle: HeaderStyle(
     formatButtonVisible: false,
@@ -230,10 +227,29 @@ class _CalendarioState extends State<Pantallacalendario> {
   ),
   daysOfWeekStyle: DaysOfWeekStyle(
     weekdayStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          fontSize: 15, // Ajusta el tamaño del texto de los días de la semana
+          fontSize: 15,
         ),
   ),
   daysOfWeekHeight: 30,
+  calendarBuilders: CalendarBuilders(
+    markerBuilder: (context, date, events) {
+      if (events.isNotEmpty) {
+        final Evento evento = events.first as Evento;
+        return Positioned(
+          bottom: 1,
+          child: Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              color: Color(evento.colorMateria),
+              shape: BoxShape.circle,
+            ),
+          ),
+        );
+      }
+      return null;
+    },
+  ),
 ),
           const SizedBox(height: 16),
           Text(DateFormat('dd/MM/yyyy').format(_focusedDay),
@@ -318,7 +334,11 @@ class _CalendarioState extends State<Pantallacalendario> {
           ),
         ],
       ),
-      floatingActionButton: const BotonAgregarEvento(),
+      floatingActionButton: BotonAgregarEvento(onEventoAgregado: () {
+        setState(() {
+          _cargarEventosDelDia(_selectedDay!);
+        });
+      },),
     );
   }
 }

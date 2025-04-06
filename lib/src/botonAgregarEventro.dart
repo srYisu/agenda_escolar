@@ -6,7 +6,9 @@ import 'package:agenda_escolar/data/boxMaterias.dart';
 import 'package:intl/intl.dart';
 
 class BotonAgregarEvento extends StatelessWidget {
-  const BotonAgregarEvento({super.key});
+  final VoidCallback? onEventoAgregado;
+  const BotonAgregarEvento({super.key, this.onEventoAgregado});
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +70,29 @@ class BotonAgregarEvento extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                  child: DropdownButtonFormField<String>(
+                  dropdownColor:Theme.of(context).cardColor,
                   decoration: InputDecoration(
+                    hoverColor: Theme.of(context).scaffoldBackgroundColor,
                     labelText: 'Materia (Opcional)',
                     border: const OutlineInputBorder(),
                     labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                   items: nombresMaterias
                       .map((nombre) => DropdownMenuItem(
+                          
                             value: nombre,
-                            child: Text(nombre),
+                            child: Text(nombre,style:Theme.of(context).primaryTextTheme.bodyMedium ,),
                           ))
                       .toList(),
                   onChanged: (value) {
                     nombreMateriaSeleccionada = value;
                   },
+                ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -97,11 +107,19 @@ class BotonAgregarEvento extends StatelessWidget {
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     final selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                    );
+  context: context,
+  initialDate: DateTime.now(),
+  firstDate: DateTime(2000),
+  lastDate: DateTime(2100),
+  builder: (context, child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor, // Fondo general
+      ),
+      child: child!,
+    );
+  },
+);
                     if (selectedDate != null) {
                       fechaSeleccionada = selectedDate;
                       fechaController.text =
@@ -147,6 +165,9 @@ class BotonAgregarEvento extends StatelessWidget {
                       );
 
                       eventosController.agregarEvento(nuevoEvento);
+                      if (onEventoAgregado != null) {
+                        onEventoAgregado!();
+                      }
                       Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

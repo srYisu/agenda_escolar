@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:agenda_escolar/main.dart';
+import 'package:agenda_escolar/src/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_escolar/data/materiasController.dart';
 import 'package:agenda_escolar/data/horariosController.dart';
@@ -26,6 +30,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
   List<String> _diasSeleccionados = [];
   DateTime? _horaInicio;
   DateTime? _horaFin;
+
 
   final List<String> _diasSemana = [
     "Lunes",
@@ -83,28 +88,38 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               "Selecciona una materia:",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            DropdownButton<String>(
-              value: _materiaSeleccionada,
-              hint: Text(
-                "Selecciona una materia",
-                style: Theme.of(context).primaryTextTheme.bodyMedium,
-              ),
-              isExpanded: true,
-              items: materias.map((materia) {
-                return DropdownMenuItem<String>(
-                  value: materia.nombreMateria,
-                  child: Text(
-                    materia.nombreMateria,
-                    style: Theme.of(context).primaryTextTheme.bodyMedium,
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _materiaSeleccionada = value;
-                });
-              },
-            ),
+            Container(
+  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+  decoration: BoxDecoration(
+    color: Theme.of(context).cardColor, // Cambia este color según lo que necesites
+    borderRadius: BorderRadius.circular(8),
+    border: Border.all(color: Colors.grey.shade400), // Opcional: borde para simular el OutlineInputBorder
+  ),
+  child: DropdownButton<String>(
+    value: _materiaSeleccionada,
+    hint: Text(
+      "Selecciona una materia",
+      style: Theme.of(context).primaryTextTheme.bodyMedium,
+    ),
+    isExpanded: true,
+    underline: const SizedBox(), // Elimina la línea por defecto debajo del dropdown
+    dropdownColor: Theme.of(context).cardColor, // Fondo del menú desplegable
+    items: materias.map((materia) {
+      return DropdownMenuItem<String>(
+        value: materia.nombreMateria,
+        child: Text(
+          materia.nombreMateria,
+          style: Theme.of(context).primaryTextTheme.bodyMedium,
+        ),
+      );
+    }).toList(),
+    onChanged: (value) {
+      setState(() {
+        _materiaSeleccionada = value;
+      });
+    },
+  ),
+),
             const SizedBox(height: 16),
             Text(
               "Selecciona los días:",
@@ -145,6 +160,19 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                   initialTime: _horaInicio != null
                       ? TimeOfDay.fromDateTime(_horaInicio!)
                       : TimeOfDay.now(),
+                      builder: (BuildContext context, Widget? child) {
+    final theme = Theme.of(context); // ← Usa el tema actual (oscuro o claro)
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: theme.canvasColor, //psihsi botoncitos de abajo
+          ),
+        ),
+      ),
+      child: child!,
+    );
+  },   
                 );
                 if (hora != null) {
                   setState(() {
@@ -162,7 +190,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaInicio != null
                     ? "Hora de inicio: ${_formatHora(_horaInicio!)}"
                     : "Seleccionar hora de inicio",
-                style: Theme.of(context).primaryTextTheme.bodyMedium,
+                style: TextStyle(color: const Color.fromARGB(255, 174, 154, 230), fontSize: 15),
               ),
             ),
             const SizedBox(height: 16),
@@ -177,6 +205,19 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                   initialTime: _horaFin != null
                       ? TimeOfDay.fromDateTime(_horaFin!)
                       : TimeOfDay.now(),
+  builder: (BuildContext context, Widget? child) {
+    final theme = Theme.of(context); // ← Usa el tema actual (oscuro o claro)
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: theme.canvasColor, //psihsi botoncitos de abajo
+          ),
+        ),
+      ),
+      child: child!,
+    );
+  },   
                 );
                 if (hora != null) {
                   setState(() {
@@ -194,7 +235,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaFin != null
                     ? "Hora de fin: ${_formatHora(_horaFin!)}"
                     : "Seleccionar hora de fin",
-                style: Theme.of(context).primaryTextTheme.bodyMedium,
+                style: TextStyle(color: const Color.fromARGB(255, 174, 154, 230), fontSize: 15),
               ),
             ),
             const SizedBox(height: 24),
