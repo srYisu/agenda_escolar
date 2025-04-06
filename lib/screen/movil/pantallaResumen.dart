@@ -153,7 +153,9 @@ class _PantallaresumenState extends State<Pantallaresumen> {
           );
         },
       ),
-      floatingActionButton: const BotonAgregarEvento(),
+      floatingActionButton: BotonAgregarEvento(onEventoAgregado: () {
+        _cargarEventosSemana();
+      },),
     );
   }
 }
