@@ -155,25 +155,24 @@ class _FormularioHorarioState extends State<FormularioHorario> {
             ),
             TextButton(
               onPressed: () async {
-                final hora = await showTimePicker(
-                  context: context,
-                  initialTime: _horaInicio != null
-                      ? TimeOfDay.fromDateTime(_horaInicio!)
-                      : TimeOfDay.now(),
-                      builder: (BuildContext context, Widget? child) {
-    final theme = Theme.of(context); // ← Usa el tema actual (oscuro o claro)
-    return Theme(
-      data: Theme.of(context).copyWith(
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: theme.canvasColor, //psihsi botoncitos de abajo
-          ),
+final hora = await showTimePicker(
+  context: context,
+  initialTime: _horaInicio != null
+      ? TimeOfDay.fromDateTime(_horaInicio!)
+      : TimeOfDay.now(),
+  builder: (BuildContext context, Widget? child) {
+    return Localizations.override(
+      context: context,
+      locale: const Locale('en', 'US'), // Forzar formato de 12 horas (AM/PM)
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          timePickerTheme: Theme.of(context).timePickerTheme,
         ),
+        child: child!,
       ),
-      child: child!,
     );
-  },   
-                );
+  },
+);
                 if (hora != null) {
                   setState(() {
                     _horaInicio = DateTime(
@@ -200,25 +199,24 @@ class _FormularioHorarioState extends State<FormularioHorario> {
             ),
             TextButton(
               onPressed: () async {
-                final hora = await showTimePicker(
-                  context: context,
-                  initialTime: _horaFin != null
-                      ? TimeOfDay.fromDateTime(_horaFin!)
-                      : TimeOfDay.now(),
+final hora = await showTimePicker(
+  context: context,
+  initialTime: _horaInicio != null
+      ? TimeOfDay.fromDateTime(_horaInicio!)
+      : TimeOfDay.now(),
   builder: (BuildContext context, Widget? child) {
-    final theme = Theme.of(context); // ← Usa el tema actual (oscuro o claro)
-    return Theme(
-      data: Theme.of(context).copyWith(
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: theme.canvasColor, //psihsi botoncitos de abajo
-          ),
+    return Localizations.override(
+      context: context,
+      locale: const Locale('en', 'US'), // Forzar formato de 12 horas (AM/PM)
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          timePickerTheme: Theme.of(context).timePickerTheme,
         ),
+        child: child!,
       ),
-      child: child!,
     );
-  },   
-                );
+  },
+);
                 if (hora != null) {
                   setState(() {
                     _horaFin = DateTime(
