@@ -153,7 +153,24 @@ class _PantallamateriasState extends State<Pantallamaterias> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _mostrarFormularioAgregarMateria,
+        onPressed: () {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: FormularioAgregarMateria(
+        agregarMateria: (String nombre, String profesor, String salon, Color color) {
+          // Aquí agregas la lógica para guardar la materia
+          print('Materia agregada: $nombre, $profesor, $salon, $color');
+        },
+      ),
+    ),
+  );
+},
         backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),

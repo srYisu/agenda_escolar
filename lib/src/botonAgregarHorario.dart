@@ -69,7 +69,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
       appBar: AppBar(
         title: Text(
           esEdicion ? "Editar Horario" : "Agregar Horario",
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: TextStyle(color: Colors.white, fontSize: 25),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -87,7 +87,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               value: _materiaSeleccionada,
               hint: Text(
                 "Selecciona una materia",
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).primaryTextTheme.bodyMedium,
               ),
               isExpanded: true,
               items: materias.map((materia) {
@@ -95,7 +95,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                   value: materia.nombreMateria,
                   child: Text(
                     materia.nombreMateria,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).primaryTextTheme.bodyMedium,
                   ),
                 );
               }).toList(),
@@ -114,9 +114,11 @@ class _FormularioHorarioState extends State<FormularioHorario> {
               spacing: 8.0,
               children: _diasSemana.map((dia) {
                 return FilterChip(
+                  disabledColor: Theme.of(context).shadowColor,
+                  backgroundColor: Theme.of(context).cardColor,
                   label: Text(
                     dia,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).primaryTextTheme.bodyMedium, 
                   ),
                   selected: _diasSeleccionados.contains(dia),
                   onSelected: (selected) {
@@ -160,7 +162,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaInicio != null
                     ? "Hora de inicio: ${_formatHora(_horaInicio!)}"
                     : "Seleccionar hora de inicio",
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).primaryTextTheme.bodyMedium,
               ),
             ),
             const SizedBox(height: 16),
@@ -192,7 +194,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 _horaFin != null
                     ? "Hora de fin: ${_formatHora(_horaFin!)}"
                     : "Seleccionar hora de fin",
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).primaryTextTheme.bodyMedium,
               ),
             ),
             const SizedBox(height: 24),
@@ -238,7 +240,7 @@ class _FormularioHorarioState extends State<FormularioHorario> {
                 ),
                 child: Text(
                   esEdicion ? "Guardar cambios" : "Agregar",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
             ),

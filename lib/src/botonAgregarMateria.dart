@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart'; // Asegúrate de agregar esta dependencia en pubspec.yaml
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:agenda_escolar/data/boxMaterias.dart';
 
 class FormularioAgregarMateria extends StatefulWidget {
@@ -78,112 +78,108 @@ class _FormularioAgregarMateriaState extends State<FormularioAgregarMateria> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final esEdicion = widget.materiaExistente != null;
-  
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        top: 16,
-        left: 16,
-        right: 16,
+Widget build(BuildContext context) {
+  final esEdicion = widget.materiaExistente != null;
+  return Container(
+    decoration: BoxDecoration(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
+    padding: const EdgeInsets.all(16),
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxHeight: 500,
       ),
       child: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onBackground,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              esEdicion ? 'Editar Materia' : 'Añadir Materia',
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          constraints: const BoxConstraints(maxHeight: 450),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                esEdicion ? 'Editar Materia' : 'Agregar Materia',
-                style: Theme.of(context).textTheme.bodyLarge,
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: nombreController,
+              decoration: InputDecoration(
+                labelText: 'Nombre de la Materia',
+                labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: nombreController,
-                decoration: InputDecoration(
-                  labelText: 'Nombre de la Materia',
-                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).primaryTextTheme.bodyMedium
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: profesorController,
+              decoration:  InputDecoration(
+                labelText: 'Nombre del Profesor',
+                labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
+                border: OutlineInputBorder(),
+              ),
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: salonController,
+              decoration:  InputDecoration(
+                labelText: 'Salón de Clases',
+                labelStyle: Theme.of(context).primaryTextTheme.bodyMedium,
+                border: OutlineInputBorder(),
+              ),
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Color Seleccionado:',
+                  style: Theme.of(context).primaryTextTheme.bodyMedium,
                 ),
-              ),
-              TextField(
-                controller: profesorController,
-                decoration: InputDecoration(
-                  labelText: 'Nombre del Profesor',
-                  labelStyle: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              TextField(
-                controller: salonController,
-                decoration: InputDecoration(
-                  labelText: 'Salón de clases',
-                  labelStyle: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Color Seleccionado:',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  GestureDetector(
-                    onTap: _mostrarSelectorDeColor,
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: colorSeleccionado,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
+                GestureDetector(
+                  onTap: _mostrarSelectorDeColor,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: colorSeleccionado,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      'Cancelar',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                if (nombreController.text.isNotEmpty) {
+                  widget.agregarMateria(
+                    nombreController.text,
+                    profesorController.text,
+                    salonController.text,
+                    colorSeleccionado,
+                  );
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Por favor, completa todos los campos.'),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.agregarMateria(
-                        nombreController.text,
-                        profesorController.text,
-                        salonController.text,
-                        colorSeleccionado,
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    child: Text(esEdicion ? 'Guardar cambios' : 'Agregar'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  );
+                }
+              },
+              child: Text(esEdicion ? 'Guardar Cambios' : 'Agregar'),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
