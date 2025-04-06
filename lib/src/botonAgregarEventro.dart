@@ -113,9 +113,7 @@ class BotonAgregarEvento extends StatelessWidget {
   lastDate: DateTime(2100),
   builder: (context, child) {
     return Theme(
-      data: Theme.of(context).copyWith(
-        dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor, // Fondo general
-      ),
+      data: Theme.of(context).copyWith(datePickerTheme: Theme.of(context).datePickerTheme),
       child: child!,
     );
   },

@@ -70,19 +70,35 @@ class _HorariocontainerState extends State<Horariocontainer> {
           ),
           // Menú desplegable para editar y eliminar
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (value) {
-              if (value == 'Editar') {
-                widget.onEditar();
-              } else if (value == 'Eliminar') {
-                widget.onEliminar();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'Editar', child: Text('Editar')),
-              const PopupMenuItem(value: 'Eliminar', child: Text('Eliminar')),
-            ],
-          ),
+  icon: Icon(
+    Icons.more_vert,
+    color: Theme.of(context).primaryIconTheme.color, // Color dinámico del ícono
+  ),
+  color: Theme.of(context).cardColor, // Fondo dinámico según el tema
+  onSelected: (value) {
+    if (value == 'Editar') {
+      widget.onEditar();
+    } else if (value == 'Eliminar') {
+      widget.onEliminar();
+    }
+  },
+  itemBuilder: (context) => [
+    PopupMenuItem(
+      value: 'Editar',
+      child: Text(
+        'Editar',
+        style: Theme.of(context).primaryTextTheme.bodyMedium, // Texto dinámico
+      ),
+    ),
+    PopupMenuItem(
+      value: 'Eliminar',
+      child: Text(
+        'Eliminar',
+        style: Theme.of(context).primaryTextTheme.bodyMedium, // Texto dinámico
+      ),
+    ),
+  ],
+),
         ],
       ),
     );

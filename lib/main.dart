@@ -5,12 +5,16 @@ import 'package:agenda_escolar/data/boxHorarios.dart';
 import 'package:agenda_escolar/data/boxMaterias.dart';
 import 'package:agenda_escolar/screen/movil/pantallInicio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:agenda_escolar/src/colores.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+
+  await initializeDateFormatting('es_ES', null); // Inicializar idioma español
 
   // Registrar adaptadores
   Hive.registerAdapter(MateriaAdapter());
@@ -60,6 +64,16 @@ class MyApp extends StatelessWidget {
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
           home: Pantallinicio(),
           debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  supportedLocales: const [
+    Locale('es'), // Español
+    Locale('en'), // Inglés, por si quieres fallback
+  ],
+  locale: Locale('es'), // Fuerza español (o usa LocaleSettings si es dinámico)
         );
       },
     );

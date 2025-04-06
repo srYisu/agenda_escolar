@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agenda_escolar/src/botonAgregarEventro.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:agenda_escolar/data/eventosController.dart';
 import 'package:agenda_escolar/data/materiasController.dart';
@@ -207,14 +208,14 @@ TableCalendar(
   },
   calendarStyle: CalendarStyle(
     todayDecoration: BoxDecoration(
-      color: Theme.of(context).primaryColor,
+      color: Color.fromARGB(255, 173, 151, 233),
       shape: BoxShape.circle,
     ),
     defaultTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
           fontSize: 16,
         ),
     selectedDecoration: BoxDecoration(
-      color: Colors.blue,
+      color: Colors.deepPurple,
       shape: BoxShape.circle,
     ),
     markerDecoration: const BoxDecoration(shape: BoxShape.circle),
@@ -305,28 +306,35 @@ TableCalendar(
                                 fontWeight: FontWeight.w600),
                           ),
                           trailing: PopupMenuButton<String>(
-                            icon: Icon(Icons.more_vert,
-                                color:
-                                    Theme.of(context).primaryIconTheme.color),
-                            onSelected: (value) {
-                              if (value == 'Editar') {
-                                _mostrarFormularioEditarEvento(
-                                    context, evento);
-                              } else if (value == 'Eliminar') {
-                                _eliminarEvento(evento);
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'Editar',
-                                child: Text('Editar'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'Eliminar',
-                                child: Text('Eliminar'),
-                              ),
-                            ],
-                          ),
+  icon: Icon(
+    Icons.more_vert,
+    color: Theme.of(context).primaryIconTheme.color,
+  ),
+  color: Theme.of(context).cardColor, // Fondo dinámico según el tema
+  onSelected: (value) {
+    if (value == 'Editar') {
+      _mostrarFormularioEditarEvento(context, evento);
+    } else if (value == 'Eliminar') {
+      _eliminarEvento(evento);
+    }
+  },
+  itemBuilder: (context) => [
+    PopupMenuItem(
+      value: 'Editar',
+      child: Text(
+        'Editar',
+        style: Theme.of(context).primaryTextTheme.bodyMedium, // Texto dinámico
+      ),
+    ),
+    PopupMenuItem(
+      value: 'Eliminar',
+      child: Text(
+        'Eliminar',
+        style: Theme.of(context).primaryTextTheme.bodyMedium, // Texto dinámico
+      ),
+    ),
+  ],
+),
                         ),
                       );
                     },
