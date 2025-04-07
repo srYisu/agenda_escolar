@@ -59,125 +59,68 @@ class _PantallamateriasState extends State<Pantallamaterias> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final bool isDesktop = MediaQuery.of(context).size.width > 600;
+@override
+Widget build(BuildContext context) {
+  final bool isDesktop = MediaQuery.of(context).size.width > 600;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: ValueListenableBuilder(
-        valueListenable: box.listenable(),
-        builder: (context, Box<Materia> box, _) {
-          if (box.isEmpty) {
-            return const Center(
-              child: Text(
-                'No hay materias disponibles',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  return Scaffold(
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    body: ValueListenableBuilder(
+      valueListenable: box.listenable(),
+      builder: (context, Box<Materia> box, _) {
+        if (box.isEmpty) {
+          return const Center(
+            child: Text(
+              'No hay materias disponibles',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          );
+        }
+
+        if (isDesktop) {
+          // Modo escritorio: Mostrar materias en renglones (GridView)
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // Número de columnas
+                crossAxisSpacing: 16, // Espaciado horizontal
+                mainAxisSpacing: 16, // Espaciado vertical
+                childAspectRatio: 3, // Relación de aspecto (ancho/alto)
               ),
-            );
-          }
+              itemCount: box.length,
+              itemBuilder: (context, index) {
+                final materia = box.getAt(index);
 
-          return ListView.builder(
-            itemCount: box.length,
-            itemBuilder: (context, index) {
-              final materia = box.getAt(index);
+                // Validar que la materia no sea null
+                if (materia == null) {
+                  return const SizedBox.shrink(); // Retorna un widget vacío
+                }
 
-              // Validar que la materia no sea null
-              if (materia == null) {
-                return const SizedBox.shrink(); // Retorna un widget vacío
-              }
-
-              if (isDesktop) {
-                // Modo escritorio: Mostrar íconos de edición y eliminación
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: materiasContaioner(
-                            colorMateria: Color(materia.colorMateria),
-                            nombreMateria: materia.nombreMateria,
-                            nombreProfesor: materia.nombreProfesor,
-                            salonClases: materia.salonClases,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _mostrarFormularioEditarMateria(index, materia);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            final confirmar = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                  "Eliminar",
-                                  style: Theme.of(context).primaryTextTheme.bodyLarge,
-                                ),
-                                backgroundColor: Theme.of(context).cardColor,
-                                content: Text(
-                                  "¿Estás seguro de eliminar esta materia?",
-                                  style: Theme.of(context).primaryTextTheme.bodySmall,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
-                                    child: const Text("Cancelar"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    child: const Text("Eliminar"),
-                                  ),
-                                ],
-                              ),
-                            );
-                            if (confirmar ?? false) {
-                              box.deleteAt(index);
-                              setState(() {}); // Actualizar la lista
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                );
-              } else {
-                // Modo móvil: Habilitar deslizar para editar/eliminar
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // Redondear esquinas
-                    child: Dismissible(
-                      key: Key(materia.nombreMateria + index.toString()),
-                      background: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10), // Redondear esquinas
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: materiasContaioner(
+                          colorMateria: Color(materia.colorMateria),
+                          nombreMateria: materia.nombreMateria,
+                          nombreProfesor: materia.nombreProfesor,
+                          salonClases: materia.salonClases,
                         ),
-                        padding: const EdgeInsets.only(left: 20),
-                        alignment: Alignment.centerLeft,
-                        child: const Icon(Icons.delete, color: Colors.white),
                       ),
-                      secondaryBackground: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10), // Redondear esquinas
-                        ),
-                        padding: const EdgeInsets.only(right: 20),
-                        alignment: Alignment.centerRight,
-                        child: const Icon(Icons.edit, color: Colors.white),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          _mostrarFormularioEditarMateria(index, materia);
+                        },
                       ),
-                      confirmDismiss: (direction) async {
-                        if (direction == DismissDirection.startToEnd) {
-                          // Confirmar eliminación
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () async {
                           final confirmar = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -202,37 +145,112 @@ class _PantallamateriasState extends State<Pantallamaterias> {
                               ],
                             ),
                           );
-                          return confirmar ?? false;
-                        } else {
-                          // Editar (no elimina)
-                          _mostrarFormularioEditarMateria(index, materia);
-                          return false;
-                        }
-                      },
-                      onDismissed: (direction) {
-                        if (direction == DismissDirection.startToEnd) {
-                          box.deleteAt(index); // Eliminar la materia
-                        }
-                      },
-                      child: materiasContaioner(
-                        colorMateria: Color(materia.colorMateria),
-                        nombreMateria: materia.nombreMateria,
-                        nombreProfesor: materia.nombreProfesor,
-                        salonClases: materia.salonClases,
+                          if (confirmar ?? false) {
+                            box.deleteAt(index);
+                            setState(() {}); // Actualizar la lista
+                          }
+                        },
                       ),
-                    ),
+                    ],
                   ),
                 );
+              },
+            ),
+          );
+        } else {
+          // Modo móvil: Habilitar deslizar para editar/eliminar
+          return ListView.builder(
+            itemCount: box.length,
+            itemBuilder: (context, index) {
+              final materia = box.getAt(index);
+
+              // Validar que la materia no sea null
+              if (materia == null) {
+                return const SizedBox.shrink(); // Retorna un widget vacío
               }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10), // Redondear esquinas
+                  child: Dismissible(
+                    key: Key(materia.nombreMateria + index.toString()),
+                    background: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10), // Redondear esquinas
+                      ),
+                      padding: const EdgeInsets.only(left: 20),
+                      alignment: Alignment.centerLeft,
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    secondaryBackground: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10), // Redondear esquinas
+                      ),
+                      padding: const EdgeInsets.only(right: 20),
+                      alignment: Alignment.centerRight,
+                      child: const Icon(Icons.edit, color: Colors.white),
+                    ),
+                    confirmDismiss: (direction) async {
+                      if (direction == DismissDirection.startToEnd) {
+                        // Confirmar eliminación
+                        final confirmar = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              "Eliminar",
+                              style: Theme.of(context).primaryTextTheme.bodyLarge,
+                            ),
+                            backgroundColor: Theme.of(context).cardColor,
+                            content: Text(
+                              "¿Estás seguro de eliminar esta materia?",
+                              style: Theme.of(context).primaryTextTheme.bodySmall,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text("Cancelar"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text("Eliminar"),
+                              ),
+                            ],
+                          ),
+                        );
+                        return confirmar ?? false;
+                      } else {
+                        // Editar (no elimina)
+                        _mostrarFormularioEditarMateria(index, materia);
+                        return false;
+                      }
+                    },
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.startToEnd) {
+                        box.deleteAt(index); // Eliminar la materia
+                      }
+                    },
+                    child: materiasContaioner(
+                      colorMateria: Color(materia.colorMateria),
+                      nombreMateria: materia.nombreMateria,
+                      nombreProfesor: materia.nombreProfesor,
+                      salonClases: materia.salonClases,
+                    ),
+                  ),
+                ),
+              );
             },
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _mostrarFormularioAgregarMateria,
-        backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
+        }
+      },
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: _mostrarFormularioAgregarMateria,
+      backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
+      child: const Icon(Icons.add, color: Colors.white),
+    ),
+  );
+}
 }
