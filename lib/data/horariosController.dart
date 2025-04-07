@@ -13,10 +13,9 @@ class HorarioController {
     print('Horario agregado: ${hora.materia} ${hora.horaInicio} - ${hora.horaFin}');
   }
 
-  Future<void> eliminarMateria(int index) async {
-    await _box.deleteAt(index);
+  Future<void> eliminarMateria(int key) async {
+    await _box.delete(key); // Usar la clave para eliminar
   }
-
   Future<void> editarMateria(int index, Horario horarioActualizado) async {
     await _box.putAt(index, horarioActualizado);
   } 

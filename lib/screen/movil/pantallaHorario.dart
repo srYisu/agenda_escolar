@@ -138,48 +138,48 @@ class _HorarioState extends State<Pantallahorario> {
     }
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal, // Habilitar desplazamiento horizontal
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _diasSemanaDesktop.map((dia) {
-          final horarios = horariosPorDia[dia]!;
-          return Container(
-            width: 300, // Ancho fijo para cada día
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  dia,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 8),
-                horarios.isEmpty
-                    ? Text(
-                        'No hay horarios disponibles.',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : Column(
-                        children: horarios.map((horario) {
-                          final bool esActivo = _esHorarioActivo(
-                              horario.horaInicio, horario.horaFin);
-                          return Horariocontainer(
-                            nombreMateria: horario.materia.nombreMateria,
-                            horaInicio: horario.horaInicio,
-                            horaFin: horario.horaFin,
-                            colorMateria: horario.color,
-                            esActivo: esActivo,
-                            onEditar: () => _editarHorario(horario),
-                            onEliminar: () => _eliminarHorario(horario),
-                          );
-                        }).toList(),
-                      ),
-              ],
+  scrollDirection: Axis.horizontal,
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: _diasSemanaDesktop.map((dia) {
+      final horarios = horariosPorDia[dia]!;
+      return Container(
+        width: 300,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              dia,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-          );
-        }).toList(),
-      ),
-    );
+            const SizedBox(height: 8),
+            horarios.isEmpty
+                ? Text(
+                    'No hay horarios disponibles.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                : Column(
+                    children: horarios.map((horario) {
+                      final bool esActivo = _esHorarioActivo(
+                          horario.horaInicio, horario.horaFin);
+                      return Horariocontainer(
+                        nombreMateria: horario.materia.nombreMateria,
+                        horaInicio: horario.horaInicio,
+                        horaFin: horario.horaFin,
+                        colorMateria: horario.color,
+                        esActivo: esActivo,
+                        onEditar: () => _editarHorario(horario),
+                        onEliminar: () => _eliminarHorario(horario), // Pasar el objeto completo
+                      );
+                    }).toList(),
+                  ),
+          ],
+        ),
+      );
+    }).toList(),
+  ),
+);
   }
 
   Widget _buildHorariosParaMovil() {
@@ -278,23 +278,22 @@ class _HorarioState extends State<Pantallahorario> {
 
               // Construir la lista de horarios
               return ListView.builder(
-                itemCount: horarios.length,
-                itemBuilder: (context, horarioIndex) {
-                  final horario = horarios[horarioIndex];
-                  final bool esActivo = _esHorarioActivo(
-                      horario.horaInicio, horario.horaFin);
+  itemCount: horarios.length,
+  itemBuilder: (context, horarioIndex) {
+    final horario = horarios[horarioIndex];
+    final bool esActivo = _esHorarioActivo(horario.horaInicio, horario.horaFin);
 
-                  return Horariocontainer(
-                    nombreMateria: horario.materia.nombreMateria,
-                    horaInicio: horario.horaInicio,
-                    horaFin: horario.horaFin,
-                    colorMateria: horario.color,
-                    esActivo: esActivo,
-                    onEditar: () => _editarHorario(horario),
-                    onEliminar: () => _eliminarHorario(horario),
-                  );
-                },
-              );
+    return Horariocontainer(
+      nombreMateria: horario.materia.nombreMateria,
+      horaInicio: horario.horaInicio,
+      horaFin: horario.horaFin,
+      colorMateria: horario.color,
+      esActivo: esActivo,
+      onEditar: () => _editarHorario(horario),
+      onEliminar: () => _eliminarHorario(horario), // Pasar el objeto completo
+    );
+  },
+);
             },
           ),
         ),
